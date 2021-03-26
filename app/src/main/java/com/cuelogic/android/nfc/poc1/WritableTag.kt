@@ -1,4 +1,4 @@
-package com.cuelogic.android.nfc
+package com.cuelogic.android.nfc.poc1
 
 import android.nfc.FormatException
 import android.nfc.NdefMessage

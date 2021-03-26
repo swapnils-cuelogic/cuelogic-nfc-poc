@@ -1,4 +1,4 @@
-package com.cuelogic.android.nfc
+package com.cuelogic.android.nfc.poc1
 
 class ByteUtils {
     companion object {

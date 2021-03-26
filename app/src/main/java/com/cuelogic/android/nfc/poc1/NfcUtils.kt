@@ -1,4 +1,4 @@
-package com.cuelogic.android.nfc
+package com.cuelogic.android.nfc.poc1
 
 import android.content.Context
 import android.content.Intent
