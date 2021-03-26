@@ -19,19 +19,26 @@ import java.io.InputStream;
 import java.lang.Thread.UncaughtExceptionHandler;
 
 import com.cuelogic.android.nfc.R;
+import com.cuelogic.android.nfc.comman.LogUtils;
 
 import android.app.Application;
+import android.content.Context;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 import android.widget.Toast;
 
-public final class ThisApplication extends Application implements UncaughtExceptionHandler {
-    private static ThisApplication instance;
+public final class MyApplication extends Application implements UncaughtExceptionHandler {
+    private static MyApplication instance;
+    private static Context myContext;
 
     @Override
     public void uncaughtException(Thread thread, Throwable ex) {
         System.exit(0);
+    }
+
+    public static Context getContext() {
+        return myContext;
     }
 
     @Override
@@ -39,6 +46,8 @@ public final class ThisApplication extends Application implements UncaughtExcept
         super.onCreate();
         Thread.setDefaultUncaughtExceptionHandler(this);
         instance = this;
+        myContext = this;
+        LogUtils.printLogs(this, "MyApplication:: onCreate");
     }
 
     public static String name() {

@@ -55,13 +55,9 @@ public final class ReaderManager extends AsyncTask<Tag, SPEC.EVENT, Card> {
     }
 
     private Card readCard(Tag tag) {
-
         final Card card = new Card();
-
         try {
-
             publishProgress(SPEC.EVENT.READING);
-
             card.setProperty(SPEC.PROP.ID, Util.toHexString(tag.getId()));
 
             final IsoDep isodep = IsoDep.get(tag);
@@ -73,7 +69,6 @@ public final class ReaderManager extends AsyncTask<Tag, SPEC.EVENT, Card> {
                 FelicaReader.readCard(nfcf, card);
 
             publishProgress(SPEC.EVENT.IDLE);
-
         } catch (Exception e) {
             card.setProperty(SPEC.PROP.EXCEPTION, e);
             publishProgress(SPEC.EVENT.ERROR);

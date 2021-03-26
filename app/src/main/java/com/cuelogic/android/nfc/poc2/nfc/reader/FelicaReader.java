@@ -17,17 +17,22 @@ package com.cuelogic.android.nfc.poc2.nfc.reader;
 
 import java.io.IOException;
 
+import com.cuelogic.android.nfc.comman.LogUtils;
+import com.cuelogic.android.nfc.poc2.MyApplication;
 import com.cuelogic.android.nfc.poc2.SPEC;
 import com.cuelogic.android.nfc.poc2.nfc.Util;
 import com.cuelogic.android.nfc.poc2.nfc.bean.Application;
 import com.cuelogic.android.nfc.poc2.nfc.bean.Card;
 import com.cuelogic.android.nfc.poc2.nfc.tech.FeliCa;
 
+import android.content.Context;
 import android.nfc.tech.NfcF;
 
 final class FelicaReader {
 
     static void readCard(NfcF tech, Card card) throws IOException {
+        Context context = MyApplication.getContext();
+        LogUtils.printLogs(context, "FelicaReader:: readCard");
 
         final FeliCa.Tag tag = new FeliCa.Tag(tech);
 

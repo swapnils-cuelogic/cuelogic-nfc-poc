@@ -31,6 +31,7 @@ import android.nfc.Tag;
 import android.nfc.tech.IsoDep;
 import android.nfc.tech.NfcF;
 
+import com.cuelogic.android.nfc.comman.LogUtils;
 import com.cuelogic.android.nfc.poc2.nfc.reader.ReaderListener;
 import com.cuelogic.android.nfc.poc2.nfc.reader.ReaderManager;
 
@@ -56,6 +57,7 @@ public final class NfcManager {
     }
 
     public NfcManager(Activity activity) {
+        LogUtils.printLogs(activity, "NfcManager:: inside the constructor");
         this.activity = activity;
         nfcAdapter = NfcAdapter.getDefaultAdapter(activity);
         pendingIntent = PendingIntent.getActivity(activity, 0, new Intent(
@@ -68,6 +70,7 @@ public final class NfcManager {
     }
 
     public void onPause() {
+        LogUtils.printLogs(activity, "NfcManager:: onPause");
         setupOldFashionBeam(false);
 
         if (nfcAdapter != null)
@@ -75,6 +78,7 @@ public final class NfcManager {
     }
 
     public void onResume() {
+        LogUtils.printLogs(activity, "NfcManager:: onResume");
         setupOldFashionBeam(true);
 
         if (nfcAdapter != null)
@@ -108,7 +112,7 @@ public final class NfcManager {
 
     @SuppressLint("NewApi")
     private void setupBeam(boolean enable) {
-
+        LogUtils.printLogs(activity, "NfcManager:: setupBeam, enable=" + enable);
         final int api = android.os.Build.VERSION.SDK_INT;
         if (nfcAdapter != null && api >= ICE_CREAM_SANDWICH) {
             if (enable)
@@ -118,7 +122,7 @@ public final class NfcManager {
 
     @SuppressWarnings("deprecation")
     private void setupOldFashionBeam(boolean enable) {
-
+        LogUtils.printLogs(activity, "NfcManager:: setupOldFashionBeam, enable=" + enable);
         final int api = android.os.Build.VERSION.SDK_INT;
         if (nfcAdapter != null && api >= GINGERBREAD_MR1
                 && api < ICE_CREAM_SANDWICH) {
@@ -132,8 +136,8 @@ public final class NfcManager {
     }
 
     NdefMessage createNdefMessage() {
-
-        String uri = "3play.google.com/store/apps/details?id=com.sinpo.xnfc";
+        String uri = "3cuelogic.com/";
+        LogUtils.printLogs(activity, "NfcManager:: createNdefMessage, uri=" + uri);
         byte[] data = uri.getBytes();
 
         // about this '3'.. see NdefRecord.createUri which need api level 14

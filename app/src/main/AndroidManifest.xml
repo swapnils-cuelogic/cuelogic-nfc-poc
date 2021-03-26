@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.NFC" />
 
     <application
-        android:name=".poc2.ThisApplication"
+        android:name=".poc2.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -24,6 +24,17 @@
         <activity
             android:name=".poc1.MainActivity"
             android:screenOrientation="portrait" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.cuelogic.android.nfc.file.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_path" />
+        </provider>
+
     </application>
 
 </manifest>

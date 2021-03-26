@@ -22,12 +22,13 @@ import android.content.Intent;
 import android.nfc.NfcAdapter;
 
 import com.cuelogic.android.nfc.R;
-import com.cuelogic.android.nfc.poc2.ThisApplication;
+import com.cuelogic.android.nfc.comman.LogUtils;
+import com.cuelogic.android.nfc.poc2.MyApplication;
 
 public final class MainPage {
 
     public static CharSequence getContent(Activity activity) {
-
+        LogUtils.printLogs(activity, "MainPage:: getContent");
         final NfcAdapter nfc = NfcAdapter.getDefaultAdapter(activity);
         final int resid;
 
@@ -38,8 +39,8 @@ public final class MainPage {
         else
             resid = R.string.info_nfc_nocard;
 
-        String tip = ThisApplication.getStringResource(resid);
-
+        String tip = MyApplication.getStringResource(resid);
+        LogUtils.printLogs(activity, "MainPage:: getContent, tip=" + tip);
         return new SpanFormatter(new Handler(activity)).toSpanned(tip);
     }
 
@@ -56,10 +57,13 @@ public final class MainPage {
         }
 
         private void startNfcSettingsActivity() {
+            LogUtils.printLogs(activity, "MainPage:: startNfcSettingsActivity");
             try {
                 activity.startActivityForResult(new Intent("android.settings.NFC_SETTINGS"), 0);
+                LogUtils.printLogs(activity, "MainPage:: android.settings.NFC_SETTINGS");
             } catch (Exception e) {
                 activity.startActivityForResult(new Intent(ACTION_SETTINGS), 0);
+                LogUtils.printLogs(activity, "MainPage:: ACTION_SETTINGS");
             }
         }
     }

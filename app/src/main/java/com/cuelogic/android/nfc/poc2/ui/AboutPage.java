@@ -19,17 +19,18 @@ import android.app.Activity;
 import android.content.Intent;
 
 import com.cuelogic.android.nfc.R;
-import com.cuelogic.android.nfc.poc2.ThisApplication;
+import com.cuelogic.android.nfc.comman.LogUtils;
+import com.cuelogic.android.nfc.poc2.MyApplication;
 
 public final class AboutPage {
     private static final String TAG = "ABOUTPAGE_ACTION";
 
     public static CharSequence getContent(Activity activity) {
-
-        String tip = ThisApplication
+        LogUtils.printLogs(activity, "AboutPage:: getContent");
+        String tip = MyApplication
                 .getStringResource(R.string.info_main_about);
-        tip = tip.replace("<app />", ThisApplication.name());
-        tip = tip.replace("<version />", ThisApplication.version());
+        tip = tip.replace("<app />", MyApplication.name());
+        tip = tip.replace("<version />", MyApplication.version());
 
         return new SpanFormatter(null).toSpanned(tip);
     }

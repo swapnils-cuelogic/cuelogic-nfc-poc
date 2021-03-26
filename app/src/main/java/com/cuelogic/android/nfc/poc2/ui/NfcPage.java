@@ -20,8 +20,9 @@ import android.app.Dialog;
 import android.content.Intent;
 
 import com.cuelogic.android.nfc.R;
+import com.cuelogic.android.nfc.comman.LogUtils;
 import com.cuelogic.android.nfc.poc2.SPEC;
-import com.cuelogic.android.nfc.poc2.ThisApplication;
+import com.cuelogic.android.nfc.poc2.MyApplication;
 import com.cuelogic.android.nfc.poc2.nfc.bean.Card;
 import com.cuelogic.android.nfc.poc2.nfc.reader.ReaderListener;
 
@@ -45,7 +46,7 @@ public final class NfcPage implements ReaderListener {
     }
 
     public static CharSequence getContent(Activity activity, Intent intent) {
-
+        LogUtils.printLogs(activity, "NfcPage:: getContent");
         String info = intent.getStringExtra(RET);
         if (info == null || info.length() == 0)
             return null;
@@ -56,6 +57,7 @@ public final class NfcPage implements ReaderListener {
 
     @Override
     public void onReadEvent(SPEC.EVENT event, Object... objs) {
+        LogUtils.printLogs(activity, "NfcPage:: onReadEvent");
         if (event == SPEC.EVENT.IDLE) {
             showProgressBar();
         } else if (event == SPEC.EVENT.FINISHED) {
@@ -72,11 +74,12 @@ public final class NfcPage implements ReaderListener {
     }
 
     private Intent buildResult(Card card) {
+        LogUtils.printLogs(activity, "NfcPage:: buildResult");
         final Intent ret = new Intent(TAG);
 
         if (card != null && !card.hasReadingException()) {
             if (card.isUnknownCard()) {
-                ret.putExtra(RET, ThisApplication
+                ret.putExtra(RET, MyApplication
                         .getStringResource(R.string.info_nfc_unknown));
             } else {
                 ret.putExtra(RET, card.toHtml());
@@ -84,13 +87,14 @@ public final class NfcPage implements ReaderListener {
             }
         } else {
             ret.putExtra(RET,
-                    ThisApplication.getStringResource(R.string.info_nfc_error));
+                    MyApplication.getStringResource(R.string.info_nfc_error));
         }
 
         return ret;
     }
 
     private void showProgressBar() {
+        LogUtils.printLogs(activity, "NfcPage:: showProgressBar");
         Dialog d = progressBar;
         if (d == null) {
             d = new Dialog(activity, R.style.progressBar);
@@ -104,6 +108,7 @@ public final class NfcPage implements ReaderListener {
     }
 
     private void hideProgressBar() {
+        LogUtils.printLogs(activity, "NfcPage:: hideProgressBar");
         final Dialog d = progressBar;
         if (d != null && d.isShowing())
             d.cancel();

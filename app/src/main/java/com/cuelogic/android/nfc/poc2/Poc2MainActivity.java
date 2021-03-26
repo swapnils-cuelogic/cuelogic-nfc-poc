@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.cuelogic.android.nfc.R;
+import com.cuelogic.android.nfc.comman.LogUtils;
 import com.cuelogic.android.nfc.poc2.nfc.NfcManager;
 import com.cuelogic.android.nfc.poc2.ui.AboutPage;
 import com.cuelogic.android.nfc.poc2.ui.MainPage;
@@ -39,11 +40,8 @@ public class Poc2MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_poc2_main);
-
         initViews();
-
         nfc = new NfcManager(this);
-
         onNewIntent(getIntent());
     }
 
@@ -117,14 +115,17 @@ public class Poc2MainActivity extends Activity {
     }
 
     public void onCopyPageContent(View view) {
+        LogUtils.printLogs(Poc2MainActivity.this, "Poc2MainActivity:: onCopyPageContent");
         toolbar.copyPageContent(getFrontPage());
     }
 
     public void onSharePageContent(View view) {
+        LogUtils.printLogs(Poc2MainActivity.this, "Poc2MainActivity:: onSharePageContent");
         toolbar.sharePageContent(getFrontPage());
     }
 
     private void loadDefaultPage() {
+        LogUtils.printLogs(Poc2MainActivity.this, "loadDefaultPage:: Default Page");
         toolbar.show(null);
 
         TextView ta = getBackPage();
@@ -136,6 +137,7 @@ public class Poc2MainActivity extends Activity {
     }
 
     private void loadAboutPage() {
+        LogUtils.printLogs(Poc2MainActivity.this, "loadNfcPage:: About Page");
         toolbar.show(R.id.btnBack);
 
         TextView ta = getBackPage();
@@ -147,6 +149,7 @@ public class Poc2MainActivity extends Activity {
     }
 
     private void loadNfcPage(Intent intent) {
+        LogUtils.printLogs(Poc2MainActivity.this, "loadNfcPage:: NFC Page");
         final CharSequence info = NfcPage.getContent(this, intent);
 
         TextView ta = getBackPage();
@@ -159,8 +162,8 @@ public class Poc2MainActivity extends Activity {
             resetTextArea(ta, SPEC.PAGE.INFO, Gravity.CENTER);
         }
 
+        LogUtils.printLogs(Poc2MainActivity.this, info.toString());
         ta.setText(info);
-
         board.showNext();
     }
 
@@ -192,11 +195,11 @@ public class Poc2MainActivity extends Activity {
     private void initViews() {
         board = (ViewSwitcher) findViewById(R.id.switcher);
 
-        Typeface tf = ThisApplication.getFontResource(R.string.font_oem1);
+        Typeface tf = MyApplication.getFontResource(R.string.font_oem1);
         TextView tv = (TextView) findViewById(R.id.txtAppName);
         //tv.setTypeface(tf);
 
-        tf = ThisApplication.getFontResource(R.string.font_oem2);
+        tf = MyApplication.getFontResource(R.string.font_oem2);
 
         tv = getFrontPage();
         tv.setMovementMethod(LinkMovementMethod.getInstance());
