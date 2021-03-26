@@ -192,11 +192,11 @@ public class Poc2MainActivity extends Activity {
     private void initViews() {
         board = (ViewSwitcher) findViewById(R.id.switcher);
 
-        //Typeface tf = ThisApplication.getFontResource(R.string.font_oem1);
+        Typeface tf = ThisApplication.getFontResource(R.string.font_oem1);
         TextView tv = (TextView) findViewById(R.id.txtAppName);
         //tv.setTypeface(tf);
 
-        //tf = ThisApplication.getFontResource(R.string.font_oem2);
+        tf = ThisApplication.getFontResource(R.string.font_oem2);
 
         tv = getFrontPage();
         tv.setMovementMethod(LinkMovementMethod.getInstance());

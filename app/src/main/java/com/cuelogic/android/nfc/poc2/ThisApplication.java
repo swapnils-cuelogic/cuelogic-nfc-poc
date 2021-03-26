@@ -37,9 +37,7 @@ public final class ThisApplication extends Application implements UncaughtExcept
     @Override
     public void onCreate() {
         super.onCreate();
-
         Thread.setDefaultUncaughtExceptionHandler(this);
-
         instance = this;
     }
 

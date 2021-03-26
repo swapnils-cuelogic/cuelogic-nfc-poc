@@ -8,12 +8,11 @@
         android:id="@+id/txtAppName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="@dimen/padding_default"
-        android:layout_marginRight="@dimen/padding_default"
+        android:layout_centerHorizontal="true"
         android:background="@null"
         android:clickable="true"
+        android:gravity="center_horizontal"
         android:onClick="onSwitch2AboutPage"
         android:shadowColor="#B0B0B0"
         android:shadowDx="-1"
@@ -21,7 +20,7 @@
         android:shadowRadius="1"
         android:text="@string/app_name"
         android:textColor="#E2E2D0"
-        android:textSize="48sp" />
+        android:textSize="32sp" />
 
     <LinearLayout
         android:id="@+id/toolbar"
