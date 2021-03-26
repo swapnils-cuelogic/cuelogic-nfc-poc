@@ -33,8 +33,6 @@ public class Logger {
     private static File lonerDirectory, lonerSendFileDirectory;
     public static final boolean isDebug = true;
     static long numberOfDay = 4;
-    static String folderName = "/android-nfc";
-    static String sendFileName = "/nfc-send-file";
 
     /**
      * This method creates a log text file and open email composer with attaching log text file
@@ -52,7 +50,7 @@ public class Logger {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String currentTime = dateFormat.format(date);
         String filename = "log" + "_" + dateFormat.format(date) + ".txt";
-        lonerDirectory = new File(context.getExternalFilesDir(null) + folderName);
+        lonerDirectory = new File(context.getExternalFilesDir(null) + "/android-nfc");
         if (!lonerDirectory.exists()) {
             lonerDirectory.mkdir();
         }
@@ -108,7 +106,8 @@ public class Logger {
         long hoursInMilli = minutesInMilli * 60;
         long daysInMilli = hoursInMilli * 24;
 
-        return different / daysInMilli;
+        long elapsedDays = different / daysInMilli;
+        return elapsedDays;
     }
 
     /**
@@ -207,16 +206,17 @@ public class Logger {
         String model = Build.MODEL;
         int version = Build.VERSION.SDK_INT;
         String versionRelease = Build.VERSION.RELEASE;
-//        String deviceId = DataStore.getStringData(context, DataStore.DEVICE_ID, null);
-//
-//        String batterylevel = String.valueOf(Math.round(AndroidUtility.getBatteryLevel(LonerApplication.getAppContext())));
+        //String deviceId = DataStore.getStringData(context, DataStore.DEVICE_ID, null);
+
+        //String batterylevel = String.valueOf(Math.round(AndroidUtility.getBatteryLevel(LonerApplication.getAppContext())));
         String appLanguage;
 
         Date date = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String currentTime = dateFormat.format(date);
         String filename = "log" + "_" + dateFormat.format(date) + ".txt";
-        lonerDirectory = new File(context.getExternalFilesDir(null) + filename);
+        //lonerDirectory = new File(Environment.getExternalStorageDirectory() + "/android-nfc");
+        lonerDirectory = new File(context.getExternalFilesDir(null) + "/android-nfc");
         if (!lonerDirectory.exists()) {
             lonerDirectory.mkdir();
         }
@@ -229,8 +229,8 @@ public class Logger {
                 e.printStackTrace();
             }
         }
-        appendLogs("Android NFC, " + "createLogFile ::  *** Device Info **** " +
-                        "\n App version = " + BuildConfig.VERSION_NAME
+        appendLogs("android-nfc, " + "createLogFile ::  *** Device Info **** "
+                        + "\n App version = " + BuildConfig.VERSION_CODE
                         //+ " \n Device id = " + deviceId
 
                         //+ " \n App Language = " + DataStore.getStringData(context, DataStore.LANGUAGE_NAME, "English")
@@ -243,7 +243,7 @@ public class Logger {
 
         appendLogs("================================================END===========================================");
         // Prepare server log file
-        lonerSendFileDirectory = new File(context.getExternalFilesDir(null) + sendFileName);
+        lonerSendFileDirectory = new File(context.getExternalFilesDir(null) + "/lonerSendFile");
         if (!lonerSendFileDirectory.exists()) {
             lonerSendFileDirectory.mkdir();
         }
@@ -278,7 +278,7 @@ public class Logger {
         // set default email Lm-490
         emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
         // set default msg Lm-490
-        emailIntent.putExtra(Intent.EXTRA_TEXT, "Kindly send the information");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "Please send this log file");
         // the mail subject
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "NFC Android-" + "Logs : " + logServerFile.getName());
         Logger.log("Android NFC", "Logger :: sending logcat mail");
