@@ -28,6 +28,7 @@ import android.widget.ViewSwitcher;
 
 import com.cuelogic.android.nfc.R;
 import com.cuelogic.android.nfc.comman.LogUtils;
+import com.cuelogic.android.nfc.comman.Logger;
 import com.cuelogic.android.nfc.poc2.nfc.NfcManager;
 import com.cuelogic.android.nfc.poc2.ui.AboutPage;
 import com.cuelogic.android.nfc.poc2.ui.MainPage;
@@ -119,10 +120,14 @@ public class Poc2MainActivity extends Activity {
         toolbar.copyPageContent(getFrontPage());
     }
 
-    public void onSharePageContent(View view) {
-        LogUtils.printLogs(Poc2MainActivity.this, "Poc2MainActivity:: onSharePageContent");
-        toolbar.sharePageContent(getFrontPage());
+    public void onShareDebugLogs(View view) {
+        LogUtils.emailLogs(Poc2MainActivity.this);
     }
+
+//    public void onSharePageContent(View view) {
+//        LogUtils.printLogs(Poc2MainActivity.this, "Poc2MainActivity:: onSharePageContent");
+//        toolbar.sharePageContent(getFrontPage());
+//    }
 
     private void loadDefaultPage() {
         LogUtils.printLogs(Poc2MainActivity.this, "loadDefaultPage:: Default Page");

@@ -183,7 +183,7 @@ public class Logger {
      * This method clear old system log from system buffer and delete old log text file
      */
     public static void clearAllLogs() {
-        Logger.log("Loner", "Logger ::  clearAllLogs");
+        Logger.log("Android NFC", "Logger ::  clearAllLogs");
         if (lonerDirectory != null) {
             for (File file : lonerDirectory.listFiles()) file.delete();
         }
@@ -192,7 +192,7 @@ public class Logger {
 
     // This function delete sender file to server.
     public static void clearServerLogs() {
-        Logger.log("Loner", "Logger ::  clearAllLogs");
+        Logger.log("Android NFC", "Logger ::  clearAllLogs");
         if (lonerSendFileDirectory != null) {
             for (File file : lonerSendFileDirectory.listFiles()) file.delete();
         }
@@ -229,7 +229,7 @@ public class Logger {
                 e.printStackTrace();
             }
         }
-        appendLogs("Loner, " + "createLogFile ::  *** Device Info **** " +
+        appendLogs("Android NFC, " + "createLogFile ::  *** Device Info **** " +
                         "\n App version = " + BuildConfig.VERSION_NAME
                         //+ " \n Device id = " + deviceId
 
@@ -265,7 +265,7 @@ public class Logger {
      */
     public static void sendLogcatMail(Context context) {
         //Write logcat to file
-        Log.d("Loner", "sending mail");
+        Log.d("Android NFC", "sending mail");
         // default email id Lm-490
         String[] TO = {"swapnil.sonar@cuelogic.com"};
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
@@ -281,7 +281,7 @@ public class Logger {
         emailIntent.putExtra(Intent.EXTRA_TEXT, "Kindly send the information");
         // the mail subject
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "NFC Android-" + "Logs : " + logServerFile.getName());
-        Logger.log("Loner", "Logger :: sending logcat mail");
+        Logger.log("Android NFC", "Logger :: sending logcat mail");
         context.startActivity(Intent.createChooser(emailIntent, "Send email..."));
     }
 
