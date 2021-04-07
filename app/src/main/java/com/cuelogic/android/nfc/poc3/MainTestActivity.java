@@ -1,6 +1,11 @@
 package com.cuelogic.android.nfc.poc3;
 
+import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
@@ -11,10 +16,12 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 
 import com.cuelogic.android.nfc.R;
 import com.cuelogic.android.nfc.comman.LogUtils;
 import com.cuelogic.android.nfc.poc2.Poc2MainActivity;
+import com.cuelogic.android.nfc.poc2.nfc.Util;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -52,6 +59,34 @@ public class MainTestActivity extends AppCompatActivity {
         LogUtils.printLogs(MainTestActivity.this, "MainTestActivity:: sending the pending intent");
         pendingIntent = PendingIntent.getActivity(this, 0,
                 new Intent(this, this.getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+
+        if (null != getIntent() && null != getIntent().getExtras()) {
+            LogUtils.printLogs(MainTestActivity.this, "MainTestActivity:: parsing intent");
+            Bundle extras = getIntent().getExtras();
+            String nfcKey = extras.getString("NFCKey");
+            LogUtils.printLogs(MainTestActivity.this, "MainTestActivity:: nfcKey=" + nfcKey);
+            if (null != nfcKey) {
+                showAlertPopup(nfcKey);
+            }
+        }
+
+    }
+
+    private void showAlertPopup(String nfcKey) {
+        String content = "We have found NFC TAG " + nfcKey + "\nWe trying to fetch more details about it!";
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(MainTestActivity.this);
+        builder1.setMessage(content);
+        builder1.setCancelable(true);
+        builder1.setPositiveButton(
+                "Okay",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alertPopup = builder1.create();
+        alertPopup.show();
     }
 
     @Override
@@ -95,7 +130,9 @@ public class MainTestActivity extends AppCompatActivity {
             if (payload.length > 0) {
                 try {
                     String text = new String(payload, "UTF-8");
-                    LogUtils.printLogs(MainTestActivity.this, "MainTestActivity:: trying to convert payload to text=" + text);
+                    LogUtils.printLogs(MainTestActivity.this, "MainTestActivity:: trying to convert payload to text="
+                            + text);
+                    sendNotification(tag);
                 } catch (UnsupportedEncodingException e) {
                     LogUtils.printLogs(MainTestActivity.this, "MainTestActivity:: UnsupportedEncodingException="
                             + e.getLocalizedMessage());
@@ -103,6 +140,41 @@ public class MainTestActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    private void sendNotification(Tag tag) {
+        LogUtils.printLogs(MainTestActivity.this, "MainTestActivity:: sendNotification");
+        Intent intent = new Intent(MainTestActivity.this, MainTestActivity.class);
+
+        byte[] id = tag.getId();
+        String hexValue = toHex(id);
+        intent.putExtra("NFCKey", hexValue);
+
+        PendingIntent contentIntent = PendingIntent.getActivity(MainTestActivity.this,
+                0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        String title = "NFC TAG Detected";
+        String content = "We have found NFC TAG " + hexValue + "\nPlease tap on it see more information";
+
+        LogUtils.printLogs(MainTestActivity.this, "MainTestActivity:: sendNotification, " +
+                "title=" + title);
+        LogUtils.printLogs(MainTestActivity.this, "MainTestActivity:: sendNotification, " +
+                "content=" + content);
+
+        NotificationCompat.Builder b = new NotificationCompat.Builder(MainTestActivity.this);
+        b.setAutoCancel(true)
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setWhen(System.currentTimeMillis())
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setTicker(title)
+                .setContentTitle(title)
+                .setContentText(content)
+                .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND)
+                .setContentIntent(contentIntent)
+                .setContentInfo(content);
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(1, b.build());
     }
 
     //For detection

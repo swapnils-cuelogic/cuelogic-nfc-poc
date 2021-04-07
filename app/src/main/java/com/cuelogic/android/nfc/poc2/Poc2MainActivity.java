@@ -34,6 +34,7 @@ import com.cuelogic.android.nfc.poc2.ui.AboutPage;
 import com.cuelogic.android.nfc.poc2.ui.MainPage;
 import com.cuelogic.android.nfc.poc2.ui.NfcPage;
 import com.cuelogic.android.nfc.poc2.ui.Toolbar;
+import com.cuelogic.android.nfc.webview.SendInputScreenActivity;
 
 public class Poc2MainActivity extends Activity {
 
@@ -124,7 +125,11 @@ public class Poc2MainActivity extends Activity {
         LogUtils.emailLogs(Poc2MainActivity.this);
     }
 
-//    public void onSharePageContent(View view) {
+    public void onSendInputs(View view) {
+        startActivity(new Intent(Poc2MainActivity.this, SendInputScreenActivity.class));
+    }
+
+//    public void onSharePageContent(Vie`w view) {
 //        LogUtils.printLogs(Poc2MainActivity.this, "Poc2MainActivity:: onSharePageContent");
 //        toolbar.sharePageContent(getFrontPage());
 //    }

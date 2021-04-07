@@ -3,6 +3,11 @@
     package="com.cuelogic.android.nfc">
 
     <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-feature
+        android:name="android.hardware.nfc"
+        android:required="true" />
 
     <application
         android:name=".poc2.MyApplication"
@@ -12,6 +17,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".poc2.Poc2MainActivity"
             android:screenOrientation="portrait">
@@ -21,6 +27,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".webview.WebScreenActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".webview.BlackLineWebScreenActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".webview.SendInputScreenActivity"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".poc3.MainTestActivity"
