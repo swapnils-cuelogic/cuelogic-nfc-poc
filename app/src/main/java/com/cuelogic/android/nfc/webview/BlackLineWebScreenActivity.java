@@ -20,6 +20,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.cuelogic.android.nfc.R;
+import com.cuelogic.android.nfc.comman.LogUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,11 +51,14 @@ public class BlackLineWebScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_webscreen);
+        LogUtils.printLogs(BlackLineWebScreenActivity.this, "BlackLineWebScreenActivity:: onCreate");
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             DEVICE_ID = extras.getString("deviceName");
             EMP_ID = extras.getString("empName");
+            LogUtils.printLogs(BlackLineWebScreenActivity.this, "BlackLineWebScreenActivity:: Bundle: deviceName="
+                    + DEVICE_ID + " empName=" + EMP_ID);
         } else {
             finish();
         }
@@ -70,12 +74,16 @@ public class BlackLineWebScreenActivity extends AppCompatActivity {
             public boolean onConsoleMessage(ConsoleMessage message) {
                 String response = message.message();
                 Log.e(TAG, "onConsoleMessage:: response=" + response);
+                LogUtils.printLogs(BlackLineWebScreenActivity.this, "BlackLineWebScreenActivity:: " +
+                        "onConsoleMessage:: response=" + response);
                 return true;
             }
         });
 
         webView.setWebViewClient(new MyWebClient());
         webView.loadUrl(QUICK_ASSIGN_URL);
+        LogUtils.printLogs(BlackLineWebScreenActivity.this, "BlackLineWebScreenActivity:: " +
+                "loadUrl=" + QUICK_ASSIGN_URL);
     }
 
     private boolean isActionPhpDone = false;
@@ -85,6 +93,8 @@ public class BlackLineWebScreenActivity extends AppCompatActivity {
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             // TODO Auto-generated method stub
             Log.e(TAG, "onPageStarted:: url=" + url);
+            LogUtils.printLogs(BlackLineWebScreenActivity.this, "BlackLineWebScreenActivity:: " +
+                    "onPageStarted:: url=" + url);
             super.onPageStarted(view, url, favicon);
             progressBar.setVisibility(View.VISIBLE);
         }
@@ -92,6 +102,8 @@ public class BlackLineWebScreenActivity extends AppCompatActivity {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             Log.e(TAG, "shouldOverrideUrlLoading:: url=" + url);
+            LogUtils.printLogs(BlackLineWebScreenActivity.this, "BlackLineWebScreenActivity:: " +
+                    "shouldOverrideUrlLoading:: url=" + url);
             view.loadUrl(url);
             return true;
 //            if (isActionPhpDone) {
@@ -105,6 +117,8 @@ public class BlackLineWebScreenActivity extends AppCompatActivity {
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
             Log.e(TAG, "onPageFinished:: url=" + url);
+            LogUtils.printLogs(BlackLineWebScreenActivity.this, "BlackLineWebScreenActivity:: " +
+                    "onPageFinished:: url=" + url);
             progressBar.setVisibility(View.GONE);
 
 //            <input type="text" name="email" id="email" value="" placeholder="Email Address" class="" prepend="<i class=&quot;fa fa-user&quot;></i>">
@@ -128,37 +142,50 @@ public class BlackLineWebScreenActivity extends AppCompatActivity {
                 } else {
                     view.loadUrl(js);
                 }
-            }
+            } else if (url.equals(QUICK_ASSIGN_URL)) {
 
-//            else if (url.equals(QUICK_ASSIGN_URL)) {
+
+//                <input _ngcontent-uwc-c197="" autofocus="" id="deviceInput" matinput="" required="" class="mat-input-element mat-form-field-autofill-control ng-tns-c55-2 ng-pristine cdk-text-field-autofill-monitored ng-invalid ng-touched" data-placeholder="Device" aria-invalid="true" aria-required="true" aria-describedby="mat-hint-0">
 //
-//
-////                <input _ngcontent-uwc-c197="" autofocus="" id="deviceInput" matinput="" required="" class="mat-input-element mat-form-field-autofill-control ng-tns-c55-2 ng-pristine cdk-text-field-autofill-monitored ng-invalid ng-touched" data-placeholder="Device" aria-invalid="true" aria-required="true" aria-describedby="mat-hint-0">
-////
-////<input _ngcontent-uwc-c197="" id="employeeInput" matinput="" required="" class="mat-input-element mat-form-field-autofill-control ng-tns-c55-6 ng-pristine ng-invalid cdk-text-field-autofill-monitored ng-touched" data-placeholder="Employee ID" aria-invalid="true" aria-required="true" aria-describedby="mat-hint-1">
-//
-//
+//<input _ngcontent-uwc-c197="" id="employeeInput" matinput="" required="" class="mat-input-element mat-form-field-autofill-control ng-tns-c55-6 ng-pristine ng-invalid cdk-text-field-autofill-monitored ng-touched" data-placeholder="Employee ID" aria-invalid="true" aria-required="true" aria-describedby="mat-hint-1">
+
+
 //                String js = "javascript:var x =document.getElementById('deviceInput').value = '"
 //                        + DEVICE_ID + "';var y=document.getElementById('employeeInput').value='"
 //                        + EMP_ID + "';";
-//
-//                String javascript = "javascript:setTimeout(function () {var x =document.getElementById('deviceInput').value = '"
-//                        + DEVICE_ID + "';var y=document.getElementById('employeeInput').value='"
-//                        + EMP_ID + "';}, 10000)";
-//
-//                //https://stackoverflow.com/questions/3276794/jquery-or-pure-js-simulate-enter-key-pressed-for-testing
-//
-//                if (Build.VERSION.SDK_INT >= 19) {
-//                    view.evaluateJavascript(javascript, new ValueCallback<String>() {
-//                        @Override
-//                        public void onReceiveValue(String s) {
-//                            Log.e(TAG, "onReceiveValue=" + s);
-//                        }
-//                    });
-//                } else {
-//                    view.loadUrl(js);
-//                }
-//            }
+
+                String javascript = "javascript:setTimeout(function () {var x =document.getElementById('deviceInput').value = '"
+                        + DEVICE_ID + "';" +
+                        "var y=document.getElementById('employeeInput').value='" + EMP_ID + "';" +
+                        "const ke = new KeyboardEvent('keydown', {bubbles: true, cancelable: true, keyCode: 13});document.body.dispatchEvent(ke);}, 10000)";
+
+
+
+
+                String newJavascript = "<script type=\"text/javascript\">\n" +
+                        "                        var app = angular.module('myApp', []);\n" +
+                        "                app.controller('myCtrl', function($scope) {\n" +
+                        "                    $scope.firstName = \"John\";\n" +
+                        "                    $scope.lastName = \"Doe\";\n" +
+                        "                    $scope.resetName = function() {\n" +
+                        "                        $scope.firstName = \"John1\";\n" +
+                        "                        $scope.lastName = \"Doe1\";\n" +
+                        "                    }\n" +
+                        "                });";
+
+                //https://stackoverflow.com/questions/3276794/jquery-or-pure-js-simulate-enter-key-pressed-for-testing
+
+                if (Build.VERSION.SDK_INT >= 19) {
+                    view.evaluateJavascript(javascript, new ValueCallback<String>() {
+                        @Override
+                        public void onReceiveValue(String s) {
+                            Log.e(TAG, "onReceiveValue=" + s);
+                        }
+                    });
+                } else {
+                    view.loadUrl(javascript);
+                }
+            }
         }
     }
 
