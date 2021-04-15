@@ -154,12 +154,119 @@ public class BlackLineWebScreenActivity extends AppCompatActivity {
 //                        + DEVICE_ID + "';var y=document.getElementById('employeeInput').value='"
 //                        + EMP_ID + "';";
 
-                String javascript = "javascript:setTimeout(function () {var x =document.getElementById('deviceInput').value = '"
-                        + DEVICE_ID + "';" +
-                        "var y=document.getElementById('employeeInput').value='" + EMP_ID + "';" +
-                        "const ke = new KeyboardEvent('keydown', {bubbles: true, cancelable: true, keyCode: 13});document.body.dispatchEvent(ke);}, 10000)";
+//                String javascript = "javascript:setTimeout(function () {var x =document.getElementById('deviceInput').value = '"
+//                        + DEVICE_ID + "';" +
+//                        "var y=document.getElementById('employeeInput').value='" + EMP_ID + "';" +
+//                        "}, 10000)";
+
+//                String javascript = "javascript:setTimeout(function () {var x =document.getElementById('deviceInput');" +
+//                        "var element = angular.element(x);" +
+//                        "element.val('" + DEVICE_ID + "';" +
+//                        "element.triggerHandler('input');" +
+//                        "var y=document.getElementById('employeeInput').value='" + EMP_ID + "';" +
+//                        "}, 10000)";
 
 
+//                String javascript = "javascript:setTimeout(function () { $scope.$apply(function() {" +
+//                        "$('#deviceInput').val('" + DEVICE_ID + "');" +
+//                        "});" +
+////                        "var x =document.getElementById('deviceInput');" +
+////                        "var element = angular.element(x);" +
+////                        "element.val('" + DEVICE_ID + "';" +
+////                        "element.triggerHandler('input');" +
+////                        "var y=document.getElementById('employeeInput').value='" + EMP_ID + "';" +
+//                        "}, 10000)";
+
+//                $scope.$apply(function() {
+//                    // every changes goes here
+//                    $('#selectedDueDate').val(dateText);
+//                });
+
+
+//                element = document.getElementById('deviceInput')
+//                element.value = "800000262"
+//                element.dispatchEvent(new Event('input', {bubbles:true }))
+//                true
+//                element = document.getElementById('employeeInput')
+//                element.value = "12345"
+//                element.dispatchEvent(new Event('input', {bubbles:true }))
+
+
+//                String javascript = "javascript:setTimeout(function () {var x =document.getElementById('deviceInput');" +
+//                        "x.value = '" + DEVICE_ID + "';" +
+//                        "x.dispatchEvent(new Event('input', {bubbles:true }));" +
+//                        "var y=document.getElementById('employeeInput');" +
+//                        "y.value='" + EMP_ID + "';" +
+//                        "y.dispatchEvent(new Event('input', {bubbles:true }));" +
+//                        "}, 10000)";
+
+
+//                var x = document.getElementById('deviceInput');
+//
+//                x.value = '800000534';
+//
+//                var val = x.value;
+//                x.value = '';
+//                x.value = val;
+//
+//                x.dispatchEvent(new Event('input', {
+//                        bubbles:true
+//  }));
+//
+//                var y = document.getElementById('employeeInput');
+//                y.focus();
+//                y.value = '12345';
+//
+//                var val1 = y.value;
+//                y.value = '';
+//                y.value = val1;
+//
+//                y.dispatchEvent(new Event('input', {
+//                        bubbles:true
+//  }));
+//                document.getElementById('employeeInput').select();
+//
+//                y.dispatchEvent(new Event('keydown', {
+//                        bubbles:true, cancelable:true, keyCode:13
+//  }));
+
+
+//                y.dispatchEvent(new KeyboardEvent('keyup', {'keyCode': 13}));
+
+//                String javascript = "javascript:setTimeout(function () {var x =document.getElementById('deviceInput');" +
+//                        "x.focus();" +
+//                        "x.value = '" + DEVICE_ID + "';" +
+//                        "var val = x.value; x.value = '';x.value = val;" +
+//                        "x.dispatchEvent(new Event('input', {bubbles:true }));" +
+//                        "x.blur();" +
+//                        "var y=document.getElementById('employeeInput');" +
+//                        "y.focus();" +
+//                        "y.value='" + EMP_ID + "';" +
+//                        "var val1 = y.value; y.value = '';y.value = val1;" +
+//                        "y.dispatchEvent(new Event('input', {bubbles:true }));" +
+//                        "document.getElementById('employeeInput').select();" +
+//                        "y.dispatchEvent(new Event('keydown', {bubbles:true, cancelable:true, keyCode:13}));" +
+//                        "y.dispatchEvent(new KeyboardEvent('keyup', {'keyCode': 13}));" +
+//                        "y.dispatchEvent(new Event('touchstart'));" +
+//                        "y.dispatchEvent(new Event('touchend'));" +
+//                        "var e = y.createEvent('TouchEvent'); e.initTouchEvent();" +
+//                        //"y.blur();" +
+//                        "}, 10000)";
+
+//                String javascript = "javascript:setTimeout(function () {var x =document.getElementById('deviceInput');" +
+//                        "x.focus();" +
+//                        "x.value = '" + DEVICE_ID + "';" +
+//                        "var val = x.value; x.value = '';x.value = val;" +
+//                        "x.dispatchEvent(new Event('input', {bubbles:true }));" +
+//                        "x.blur();" +
+//                        "var y=document.getElementById('employeeInput');" +
+//                        "y.focus();" +
+//                        "y.value='" + EMP_ID + "';" +
+//                        "var val1 = y.value; y.value = '';y.value = val1;" +
+//                        "y.dispatchEvent(new Event('input', {bubbles:true }));" +
+//                        "y.select();" +
+//                        "y.focus();" +
+//                        "}, 10000)";
 
 
                 String newJavascript = "<script type=\"text/javascript\">\n" +
@@ -172,6 +279,54 @@ public class BlackLineWebScreenActivity extends AppCompatActivity {
                         "                        $scope.lastName = \"Doe1\";\n" +
                         "                    }\n" +
                         "                });";
+
+//                var x = document.getElementById('deviceInput');
+//                x.value = '800000534';
+//
+//                x.dispatchEvent(new KeyboardEvent('keyup', {'keyCode':13}));
+//
+//                x.dispatchEvent(new Event('input', {
+//                        bubbles:true
+//  }));
+//
+//                x.blur();
+//
+//                var y = document.getElementById('employeeInput');
+//
+//                y.value = '12345';
+//
+//                y.dispatchEvent(new Event('input', {
+//                        bubbles:true
+//  }));
+//
+//                y.blur();
+//
+//                setTimeout(function() {
+//                    y.select();
+//                    y.focus();
+//                },5000);
+
+
+                String javascript = "javascript:setTimeout(function () {var x =document.getElementById('deviceInput');" +
+                        "x.value = '" + DEVICE_ID + "';" +
+                        "x.dispatchEvent(new KeyboardEvent('keyup', {'keyCode':13}));" +
+                        "var val = x.value; x.value = '';x.value = val;" +
+                        "x.dispatchEvent(new Event('input', {bubbles:true }));" +
+                        "x.blur();" +
+                        "var y=document.getElementById('employeeInput');" +
+                        "y.value='" + EMP_ID + "';" +
+                        "var val1 = y.value; y.value = '';y.value = val1;" +
+                        "y.dispatchEvent(new Event('input', {bubbles:true }));" +
+                        "y.blur();" +
+                        "setTimeout(function() { y.select();y.focus(); },5000);" +
+                        "y.dispatchEvent(new KeyboardEvent('keyup', {'keyCode':13}));" +
+                        "}, 10000)";
+
+                Log.e("onPageFinished", "javascript=" + javascript);
+//                var selectedDueDateField = document.getElementById("selectedDueDate");
+//                var element = angular.element(selectedDueDateField);
+//                element.val('new value here');
+//                element.triggerHandler('input');
 
                 //https://stackoverflow.com/questions/3276794/jquery-or-pure-js-simulate-enter-key-pressed-for-testing
 
