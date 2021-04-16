@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (nfcAdapter == null) {
             LogUtils.printLogs(MainActivity.this, "MainActivity:: No NFC Feature found");
-            Toast.makeText(this, "No NFC Feature found", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "No NFC Feature found", Toast.LENGTH_SHORT).show();
             text.setText("No NFC Feature found");
             new Handler().postDelayed(new Runnable() {
                 @Override

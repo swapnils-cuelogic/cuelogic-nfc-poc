@@ -1,26 +1,38 @@
 package com.cuelogic.android.nfc.webview;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.ConsoleMessage;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.cuelogic.android.nfc.R;
+import com.cuelogic.android.nfc.api.JavaScriptReceiver;
+import com.cuelogic.android.nfc.comman.MainApplication;
+import com.cuelogic.android.nfc.api.RequestInfo;
+import com.cuelogic.android.nfc.api.ResponseInfo;
 import com.cuelogic.android.nfc.comman.LogUtils;
+import com.cuelogic.android.nfc.main.MainActivity;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,6 +43,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class BlackLineWebScreenActivity extends AppCompatActivity {
 
@@ -45,6 +62,9 @@ public class BlackLineWebScreenActivity extends AppCompatActivity {
 
     private String DEVICE_ID = "RT001100";
     private String EMP_ID = "Cue1100";
+
+    private JavaScriptReceiver javaScriptReceiver;
+    private String token;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -69,6 +89,14 @@ public class BlackLineWebScreenActivity extends AppCompatActivity {
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);
+        javaScriptReceiver = new JavaScriptReceiver(this, new CueWebListener() {
+            @Override
+            public void onAssignDevice() {
+                Log.e(TAG, "onAssignDevice");
+                assignDevice();
+            }
+        });
+        webView.addJavascriptInterface(javaScriptReceiver, "JSReceiver");
 
         webView.setWebChromeClient(new WebChromeClient() {
             public boolean onConsoleMessage(ConsoleMessage message) {
@@ -320,6 +348,7 @@ public class BlackLineWebScreenActivity extends AppCompatActivity {
                         "y.blur();" +
                         "setTimeout(function() { y.select();y.focus(); },5000);" +
                         "y.dispatchEvent(new KeyboardEvent('keyup', {'keyCode':13}));" +
+                        "JSReceiver.assignDevice();" +
                         "}, 10000)";
 
                 Log.e("onPageFinished", "javascript=" + javascript);
@@ -342,6 +371,33 @@ public class BlackLineWebScreenActivity extends AppCompatActivity {
                 }
             }
         }
+
+        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+        @Nullable
+        @Override
+        public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+            //Log.e(TAG, "shouldInterceptRequest= WebURL=" + request.getUrl().toString());
+
+            Map<String, String> result = request.getRequestHeaders();
+            try {
+//                String[] arr = result.get("Authorization").split(" ");
+//                String token = arr[1];
+                token = result.get("Authorization");
+                //Log.e(TAG, "Token=" + token);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return super.shouldInterceptRequest(view, request);
+        }
+
+//        @Nullable
+//        @Override
+//        public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+//            Log.e(TAG, "shouldInterceptRequest= url");
+//            Log.e(TAG, "shouldInterceptRequest= " + url);
+//            return super.shouldInterceptRequest(view, url);
+//        }
     }
 
     @Override
@@ -352,6 +408,67 @@ public class BlackLineWebScreenActivity extends AppCompatActivity {
         }
 
         return super.onKeyDown(keyCode, event);
+    }
+
+//    {
+//        "device": {
+//        "type": "device",
+//                "spec": {
+//            "desc": "80000262"
+//        }
+//    },
+//        "employee": {
+//        "type": "user",
+//                "spec": {
+//            "desc": "test"
+//        }
+//    }
+//    }
+
+    public void assignDevice() {
+        RequestInfo info = new RequestInfo();
+
+        RequestInfo.Device device = new RequestInfo.Device();
+        RequestInfo.Spec deviceSpec = new RequestInfo.Spec();
+        deviceSpec.desc = "800000534";
+        device.spec = deviceSpec;
+        info.device = device;
+
+        RequestInfo.Employee employee = new RequestInfo.Employee();
+        RequestInfo.Spec empSpec = new RequestInfo.Spec();
+        empSpec.desc = "12345";
+        employee.spec = empSpec;
+        info.employee = employee;
+
+        //String token = "Bearer eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiemlwIjoiREVGIn0..jBEW0mE2SAYvacnWSjCEwA.J23OpPORtFLwLH21la8xmE5kX-smSebpIKzratwgal24ekOSoK0xV7zXVtaUOPJWCE326aRfC5Mz13N0UGKlYZzUjH6rAlgDg1_8KyZHytKBnZUyjUHnQkZJqKHAeqzS1tuGSDT4TOtqQRK9hC6o6n9puzUTXlHhw6Z5MxODwNBw-FLIjrXtMCQpjcBadlKT9dDv7GTRQqcD7XgPu_ixiKR5CX5-bgi3eW3mocsJAqN7uiqEIBpvhc2WKJVKWIeph6ViejSmTC3HZ8vfTYWQVNewU4VjMCkI7d49eWkOfFhqszT_TnHHzLhnzRJtnuTnqIwHiBjsUu_eYrlg_qwvrCuIbbnM5OXRYOv_rNRTdndOFSCeAUsChgyrj4eJEs9DblX35gLIur0PW3se2wpZzeyE5BWZcPsv2OXVKrpjjyYYGx-9G8KvmMjXIZ0tEyUbcgPFWfG7e0WUIruI-ypZ_NJyW2hdKMtT1JYZDzkiPs3BdO3V2Mc3fM1DL_XSLXX97IFYSOmDhfw4Om9cGksUHorpwSGbPxf5IfOblYwFD6r3hsMpXV5hgvTQd3DNq83lVtzXV9JSvRd2fDeN8IESTvW3yUP0r9lGpD9vsoh5P1XV_T-4X9Ns4zYSP0GsHpIHoP5e1UBK5Up5i3f5Z5uc91RxoaIIINsIK7cuUAc3RAl7u0riy-aMN4WLY5kheBF0.LBZjpIQgT012-k-CrvhHVg";
+        MainApplication.apiManager.assignDevice(token, info, new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, Response<Object> response) {
+                String body = response.body().toString();
+                Log.e(TAG, "onResponse=" + body);
+                ResponseInfo responseInfo = new Gson().fromJson(body, ResponseInfo.class);
+                String message = "Something went wrong";
+                if (responseInfo.assigned) {
+                    message = "Device assigned successfully";
+                }
+                Toast.makeText(BlackLineWebScreenActivity.this, message, Toast.LENGTH_LONG).show();
+                new Handler().postDelayed(() -> runOnUiThread(() -> navigateToHome()), 200);
+            }
+
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
+                Log.e(TAG, "onFailure=" + t);
+                Toast.makeText(BlackLineWebScreenActivity.this,
+                        "Error while device getting assigned. Please try again", Toast.LENGTH_LONG).show();
+                new Handler().postDelayed(() -> runOnUiThread(() -> navigateToHome()), 200);
+            }
+        });
+    }
+
+    private void navigateToHome() {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
 
