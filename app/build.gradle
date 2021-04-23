@@ -45,8 +45,8 @@ android {
         }
 
         prod {
-            versionCode 38
-            versionName "2.0.9"
+            versionCode 47
+            versionName "2.1.8"
             signingConfig signingConfigs.release
         }
     }

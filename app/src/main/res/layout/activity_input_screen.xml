@@ -6,17 +6,6 @@
     android:orientation="vertical">
 
     <EditText
-        android:id="@+id/edtDeviceName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="20dp"
-        android:hint="Device Name"
-        android:text=""
-        android:textColor="@android:color/black" />
-
-    <EditText
         android:id="@+id/edtEmpName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,6 +13,17 @@
         android:layout_marginTop="20dp"
         android:layout_marginRight="20dp"
         android:hint="Employee Name"
+        android:text=""
+        android:textColor="@android:color/black" />
+
+    <EditText
+        android:id="@+id/edtDeviceName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:hint="Device Name"
         android:text=""
         android:textColor="@android:color/black" />
 

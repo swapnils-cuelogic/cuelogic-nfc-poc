@@ -23,6 +23,14 @@
 
         <activity
             android:name=".main.MainActivity"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".webview.TestBLWebScreenActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".main.ScanEmpActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -38,6 +46,10 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".main.ScanDeviceActivity"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".webview.WebScreenActivity"

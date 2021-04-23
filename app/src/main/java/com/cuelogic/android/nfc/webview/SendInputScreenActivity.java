@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.cuelogic.android.nfc.R;
+import com.cuelogic.android.nfc.comman.Constants;
 import com.cuelogic.android.nfc.comman.LogUtils;
 import com.cuelogic.android.nfc.main.MainActivity;
 
@@ -20,6 +21,8 @@ public class SendInputScreenActivity extends AppCompatActivity {
     private static final String TAG = SendInputScreenActivity.class.getSimpleName();
     private EditText edtDeviceName, edtEmpName;
     private Button btnSend;
+
+    String empName, deviceName;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,16 +36,19 @@ public class SendInputScreenActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            String deviceName = extras.getString("deviceName");
+            empName = extras.getString(Constants.EMP_ID);
+            deviceName = extras.getString(Constants.DEVICE_ID);
+
+            //assigning values
+            edtEmpName.setText(empName);
             edtDeviceName.setText(deviceName);
-            edtEmpName.setText(deviceName);
         } else {
             finish();
         }
 
-        //TODO testing purpose
-        edtDeviceName.setText("800000534");
-        edtEmpName.setText("12345");
+//        //TODO testing purpose
+//        edtDeviceName.setText("800000534");
+//        edtEmpName.setText("12345");
 
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,8 +79,8 @@ public class SendInputScreenActivity extends AppCompatActivity {
                 + deviceName + "empName: " + empName);
         //WebScreenActivity
         Intent i = new Intent(SendInputScreenActivity.this, BlackLineWebScreenActivity.class);
-        i.putExtra("deviceName", deviceName);
-        i.putExtra("empName", empName);
+        i.putExtra(Constants.DEVICE_ID, deviceName);
+        i.putExtra(Constants.EMP_ID, empName);
         startActivity(i);
     }
 }
