@@ -16,17 +16,6 @@
             android:layout_height="match_parent"
             android:visibility="invisible" />
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_centerInParent="true"
-            android:layout_gravity="center"
-            android:indeterminate="true"
-            android:indeterminateTint="@color/colorPrimary"
-            android:indeterminateTintMode="src_atop"
-            android:visibility="visible" />
-
     </RelativeLayout>
 
     <LinearLayout
@@ -75,7 +64,6 @@
                 android:hint="Email Address"
                 android:inputType="textEmailAddress"
                 android:paddingLeft="7dp"
-                android:paddingTop="4dp"
                 android:paddingBottom="7dp"
                 android:text=""
                 android:textColor="@android:color/black"
@@ -107,7 +95,6 @@
                 android:hint="Password"
                 android:inputType="textPassword"
                 android:paddingLeft="7dp"
-                android:paddingTop="4dp"
                 android:paddingBottom="7dp"
                 android:text=""
                 android:textColor="@android:color/black"
@@ -125,11 +112,34 @@
                 android:layout_marginTop="16dp"
                 android:background="@drawable/bg_rounded_button"
                 android:fontFamily="@font/michroma_regular"
+                android:gravity="center"
+                android:paddingBottom="5dp"
                 android:text="Sign In"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white" />
 
         </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/progress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:gravity="center"
+        android:visibility="visible">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_margin="16dp"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/themeColor"
+            android:indeterminateTintMode="src_atop"
+            android:visibility="visible" />
+
     </LinearLayout>
 
 </FrameLayout>
