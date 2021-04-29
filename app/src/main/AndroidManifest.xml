@@ -64,7 +64,8 @@
 
         <activity
             android:name=".main.ScanDeviceActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name=".webview.WebScreenActivity"
@@ -76,7 +77,8 @@
 
         <activity
             android:name=".main.AssignDeviceScreenActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
 
 
         <activity

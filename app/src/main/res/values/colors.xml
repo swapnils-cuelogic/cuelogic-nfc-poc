@@ -14,4 +14,6 @@
     <color name="tag_h3">#FF505050</color>
     <color name="tag_text">#FF111111</color>
     <color name="tag_lab">#FF3F3F3F</color>
+
+    <color name="themeColor">#802E32</color>
 </resources>

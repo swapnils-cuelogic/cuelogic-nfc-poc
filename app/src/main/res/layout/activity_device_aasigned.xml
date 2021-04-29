@@ -2,8 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp">
+    android:layout_height="match_parent">
 
     <RelativeLayout
 
@@ -17,38 +16,32 @@
             android:layout_height="match_parent"
             android:visibility="invisible" />
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_centerInParent="true"
-            android:layout_gravity="center"
-            android:indeterminate="true"
-            android:indeterminateTint="@color/colorPrimary"
-            android:indeterminateTintMode="src_atop"
-            android:visibility="visible" />
-
     </RelativeLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/screenContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/holo_green_light">
+        android:gravity="center"
+        android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/linAssigned"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_centerHorizontal="true"
-            android:orientation="horizontal">
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
 
             <ImageView
                 android:id="@+id/ivEmpCard"
-                android:layout_width="240dp"
-                android:layout_height="240dp"
-                android:src="@mipmap/ic_launcher" />
+                android:layout_width="0dp"
+                android:layout_height="360dp"
+                android:layout_weight="1"
+                android:src="@drawable/ic_configuration" />
 
             <View
                 android:layout_width="16dp"
@@ -56,9 +49,10 @@
 
             <ImageView
                 android:id="@+id/ivDevice"
-                android:layout_width="240dp"
-                android:layout_height="240dp"
-                android:src="@mipmap/ic_launcher" />
+                android:layout_width="0dp"
+                android:layout_height="360dp"
+                android:layout_weight="1"
+                android:src="@drawable/ic_device" />
 
         </LinearLayout>
 
@@ -66,12 +60,28 @@
             android:id="@+id/tvScan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/linAssigned"
-            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
-            android:text=""
+            android:fontFamily="@font/opensans_regular"
+            android:text="Device Assigned!"
             android:textSize="24sp" />
 
-    </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp">
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:indeterminate="true"
+                android:indeterminateTint="@color/themeColor"
+                android:indeterminateTintMode="src_atop"
+                android:visibility="visible" />
+        </RelativeLayout>
+
+    </LinearLayout>
 
 </FrameLayout>

@@ -85,11 +85,11 @@ public class AssignDeviceScreenActivity extends AppCompatActivity {
         webView.setVisibility(View.INVISIBLE);
         progressBar = findViewById(R.id.progressBar);
 
-        RelativeLayout layout = findViewById(R.id.screenContent);
+        View layout = findViewById(R.id.screenContent);
         layout.setVisibility(View.VISIBLE);
 
         tvScan = findViewById(R.id.tvScan);
-        tvScan.setText("Device assigning.. Please wait");
+        tvScan.setText("Processing..");
 
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
@@ -172,7 +172,6 @@ public class AssignDeviceScreenActivity extends AppCompatActivity {
             Log.e(TAG, "onPageFinished:: url=" + url);
             LogUtils.printLogs(AssignDeviceScreenActivity.this, "BlackLineWebScreenActivity:: " +
                     "onPageFinished:: url=" + url);
-            progressBar.setVisibility(View.GONE);
             if (url.equals(WEB_URL)) {
                 String js = "javascript:var x =document.getElementById('email').value = '"
                         + EMAIL + "';var y=document.getElementById('password').value='"
@@ -192,38 +191,6 @@ public class AssignDeviceScreenActivity extends AppCompatActivity {
                     view.loadUrl(js);
                 }
             } else if (url.equals(QUICK_ASSIGN_URL)) {
-
-                //TODO code before tech team inputs
-//                String javascript = "javascript:setTimeout(function () {var x =document.getElementById('deviceInput');" +
-//                        "x.value = '" + DEVICE_ID + "';" +
-//                        "x.dispatchEvent(new KeyboardEvent('keyup', {'keyCode':13}));" +
-//                        "var val = x.value; x.value = '';x.value = val;" +
-//                        "x.dispatchEvent(new Event('input', {bubbles:true }));" +
-//                        "x.blur();" +
-//                        "var y=document.getElementById('employeeInput');" +
-//                        "y.value='" + EMP_ID + "';" +
-//                        "var val1 = y.value; y.value = '';y.value = val1;" +
-//                        "y.dispatchEvent(new Event('input', {bubbles:true }));" +
-//                        "y.blur();" +
-//                        "setTimeout(function() { y.select();y.focus(); },5000);" +
-//                        "y.dispatchEvent(new KeyboardEvent('keyup', {'keyCode':13}));" +
-//                        "JSReceiver.assignDevice();" +
-//                        "}, 10000)";
-
-//                String javascript = "javascript:setTimeout(function () {var x =document.getElementById('deviceInput');" +
-//                        "x.value = '" + DEVICE_ID + "';" +
-//                        //"x.dispatchEvent(new KeyboardEvent('keyup', {'keyCode':13}));" +
-//                        "x.dispatchEvent(new Event('input', {bubbles:true }));" +
-//                        "var y=document.getElementById('employeeInput');" +
-//                        "y.value='" + EMP_ID + "';" +
-//                        "y.dispatchEvent(new Event('input', {bubbles:true }));" +
-//                        "y.dispatchEvent(new KeyboardEvent('keydown', {code:'Enter',key:'Enter', view:window, bubbles:true, cancelable:true, keyCode:13}));" +
-//                        //"y.dispatchEvent(new KeyboardEvent('keypress', {code:'Enter',key:'Enter', view:window, bubbles:true, cancelable:true, keyCode:13}));" +
-//                        "y.dispatchEvent(new KeyboardEvent('keyup', {code:'Enter',key:'Enter', view:window, bubbles:true, cancelable:true, keyCode:13}));" +
-//                        "JSReceiver.assignDevice();" +
-//                        "}, 10000)";
-
-
                 String javascript = "javascript:" +
                         "function addXMLRequestCallback(callback) {\n" +
                         "  var oldSend, i;\n" +
@@ -271,7 +238,7 @@ public class AssignDeviceScreenActivity extends AppCompatActivity {
                         //"y.dispatchEvent(new KeyboardEvent('keypress', {code:'Enter',key:'Enter', view:window, bubbles:true, cancelable:true, keyCode:13}));" +
                         "y.dispatchEvent(new KeyboardEvent('keyup', {code:'Enter',key:'Enter', view:window, bubbles:true, cancelable:true, keyCode:13}));" +
                         "JSReceiver.assignDevice();" +
-                        "}, 10000)";
+                        "}, 7000)";
 
 
                 Log.e("Javascript", "javascript=" + javascript);
@@ -298,25 +265,15 @@ public class AssignDeviceScreenActivity extends AppCompatActivity {
         @Nullable
         @Override
         public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-            //Log.e(TAG, "shouldInterceptRequest= WebURL=" + request.getUrl().toString());
             Map<String, String> result = request.getRequestHeaders();
             try {
                 token = result.get("Authorization");
-                //Log.e(TAG, "Token=" + token);
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
             return super.shouldInterceptRequest(view, request);
         }
-
-//        @Nullable
-//        @Override
-//        public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
-//            Log.e(TAG, "shouldInterceptRequest= url");
-//            Log.e(TAG, "shouldInterceptRequest= " + url);
-//            return super.shouldInterceptRequest(view, url);
-//        }
     }
 
     @Override
@@ -329,56 +286,11 @@ public class AssignDeviceScreenActivity extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    public void assignDevice() {
-        RequestInfo info = new RequestInfo();
-
-        RequestInfo.Device device = new RequestInfo.Device();
-        RequestInfo.Spec deviceSpec = new RequestInfo.Spec();
-        deviceSpec.desc = DEVICE_ID;
-        device.spec = deviceSpec;
-        info.device = device;
-
-        RequestInfo.Employee employee = new RequestInfo.Employee();
-        RequestInfo.Spec empSpec = new RequestInfo.Spec();
-        empSpec.desc = EMP_ID;
-        employee.spec = empSpec;
-        info.employee = employee;
-
-        //String token = "Bearer eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiemlwIjoiREVGIn0..jBEW0mE2SAYvacnWSjCEwA.J23OpPORtFLwLH21la8xmE5kX-smSebpIKzratwgal24ekOSoK0xV7zXVtaUOPJWCE326aRfC5Mz13N0UGKlYZzUjH6rAlgDg1_8KyZHytKBnZUyjUHnQkZJqKHAeqzS1tuGSDT4TOtqQRK9hC6o6n9puzUTXlHhw6Z5MxODwNBw-FLIjrXtMCQpjcBadlKT9dDv7GTRQqcD7XgPu_ixiKR5CX5-bgi3eW3mocsJAqN7uiqEIBpvhc2WKJVKWIeph6ViejSmTC3HZ8vfTYWQVNewU4VjMCkI7d49eWkOfFhqszT_TnHHzLhnzRJtnuTnqIwHiBjsUu_eYrlg_qwvrCuIbbnM5OXRYOv_rNRTdndOFSCeAUsChgyrj4eJEs9DblX35gLIur0PW3se2wpZzeyE5BWZcPsv2OXVKrpjjyYYGx-9G8KvmMjXIZ0tEyUbcgPFWfG7e0WUIruI-ypZ_NJyW2hdKMtT1JYZDzkiPs3BdO3V2Mc3fM1DL_XSLXX97IFYSOmDhfw4Om9cGksUHorpwSGbPxf5IfOblYwFD6r3hsMpXV5hgvTQd3DNq83lVtzXV9JSvRd2fDeN8IESTvW3yUP0r9lGpD9vsoh5P1XV_T-4X9Ns4zYSP0GsHpIHoP5e1UBK5Up5i3f5Z5uc91RxoaIIINsIK7cuUAc3RAl7u0riy-aMN4WLY5kheBF0.LBZjpIQgT012-k-CrvhHVg";
-        MainApplication.apiManager.assignDevice(token, info, new Callback<Object>() {
-            @Override
-            public void onResponse(Call<Object> call, Response<Object> response) {
-                Log.e(TAG, "onResponse: " + response.body());
-                if (null == response.body()) return;
-
-                String body = response.body().toString();
-                if (null == body) return;
-                if (TextUtils.isEmpty(body)) return;
-
-                Log.e(TAG, "onResponse=" + body);
-                ResponseInfo responseInfo = new Gson().fromJson(body, ResponseInfo.class);
-                String message = "Something went wrong";
-                if (responseInfo.assigned) {
-                    message = "Device assigned successfully";
-                }
-                Toast.makeText(AssignDeviceScreenActivity.this, message, Toast.LENGTH_LONG).show();
-                new Handler().postDelayed(() -> runOnUiThread(() -> navigateToHome()), 200);
-            }
-
-            @Override
-            public void onFailure(Call<Object> call, Throwable t) {
-                Log.e(TAG, "onFailure=" + t);
-                Toast.makeText(AssignDeviceScreenActivity.this,
-                        "Error while device getting assigned. Please try again", Toast.LENGTH_LONG).show();
-                new Handler().postDelayed(() -> runOnUiThread(() -> navigateToHome()), 200);
-            }
-        });
-    }
-
     private boolean isRedirectHome;
 
     private void navigateToHome() {
         LogUtils.printLogs(AssignDeviceScreenActivity.this, "BlackLineWebScreenActivity:: navigateToHome");
+        progressBar.setVisibility(View.GONE);
         isRedirectHome = true;
         tvScan.setText("Device Assigned!");
         Toast.makeText(AssignDeviceScreenActivity.this, "Device assigned successfully",

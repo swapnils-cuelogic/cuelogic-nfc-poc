@@ -9,7 +9,6 @@ import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,8 +20,6 @@ import com.cuelogic.android.nfc.R;
 import com.cuelogic.android.nfc.comman.Constants;
 import com.cuelogic.android.nfc.comman.LogUtils;
 import com.cuelogic.android.nfc.comman.Utils;
-import com.cuelogic.android.nfc.webview.BlackLineWebScreenActivity;
-import com.cuelogic.android.nfc.webview.SendInputScreenActivity;
 
 public class ScanDeviceActivity extends BaseActivity {
 
@@ -38,7 +35,7 @@ public class ScanDeviceActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_scan_device);
+        setContentView(R.layout.activity_scan_device);
         LogUtils.printLogs(ScanDeviceActivity.this, "ScanDeviceActivity:: onCreate");
 
         tvScan = (TextView) findViewById(R.id.tvScan);

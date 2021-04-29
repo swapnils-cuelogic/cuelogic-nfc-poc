@@ -1,38 +1,26 @@
 package com.cuelogic.android.nfc.main;
 
-import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
-import android.nfc.tech.MifareClassic;
-import android.nfc.tech.MifareUltralight;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
-import android.provider.Settings;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.cuelogic.android.nfc.R;
 import com.cuelogic.android.nfc.comman.Constants;
 import com.cuelogic.android.nfc.comman.LogUtils;
-import com.cuelogic.android.nfc.comman.Logger;
 import com.cuelogic.android.nfc.comman.Utils;
-import com.cuelogic.android.nfc.parse.NdefMessageParser;
-import com.cuelogic.android.nfc.parse.ParsedNdefRecord;
 import com.cuelogic.android.nfc.webview.SendInputScreenActivity;
-
-import java.util.List;
 
 public class ScanEmpActivity extends BaseActivity {
 
@@ -47,7 +35,7 @@ public class ScanEmpActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_scan_employee);
+        setContentView(R.layout.activity_scan_employee);
         LogUtils.printLogs(ScanEmpActivity.this, "ScanEmpActivity:: onCreate");
 
         tvScan = (TextView) findViewById(R.id.tvScan);
