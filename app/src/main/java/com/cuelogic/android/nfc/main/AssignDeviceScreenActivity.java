@@ -1,9 +1,8 @@
-package com.cuelogic.android.nfc.webview;
+package com.cuelogic.android.nfc.main;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,6 +19,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -29,26 +30,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.cuelogic.android.nfc.R;
 import com.cuelogic.android.nfc.api.ConsoleResponse;
 import com.cuelogic.android.nfc.api.JavaScriptReceiver;
-import com.cuelogic.android.nfc.comman.Constants;
-import com.cuelogic.android.nfc.comman.Logger;
-import com.cuelogic.android.nfc.comman.MainApplication;
 import com.cuelogic.android.nfc.api.RequestInfo;
 import com.cuelogic.android.nfc.api.ResponseInfo;
+import com.cuelogic.android.nfc.comman.Constants;
 import com.cuelogic.android.nfc.comman.LogUtils;
-import com.cuelogic.android.nfc.main.MainActivity;
-import com.cuelogic.android.nfc.main.ScanEmpActivity;
+import com.cuelogic.android.nfc.comman.MainApplication;
+import com.cuelogic.android.nfc.webview.CueWebListener;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -56,11 +46,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 //https://jsfiddle.net/swapnilsonar/w0c7s342/3/
-public class BlackLineWebScreenActivity extends AppCompatActivity {
+public class AssignDeviceScreenActivity extends AppCompatActivity {
 
-    private static final String TAG = BlackLineWebScreenActivity.class.getSimpleName();
+    private static final String TAG = AssignDeviceScreenActivity.class.getSimpleName();
     private WebView webView;
     private ProgressBar progressBar;
+    private TextView tvScan;
     private String WEB_URL = "https://live.blacklinesafety.com/sign-in?redirect_to=/ng/quick-assign";
     private String QUICK_ASSIGN_URL = "https://live.blacklinesafety.com/ng/quick-assign";
 
@@ -77,21 +68,28 @@ public class BlackLineWebScreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_webscreen);
-        LogUtils.printLogs(BlackLineWebScreenActivity.this, "BlackLineWebScreenActivity:: onCreate");
+        setContentView(R.layout.activity_device_aasigned);
+        LogUtils.printLogs(AssignDeviceScreenActivity.this, "BlackLineWebScreenActivity:: onCreate");
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             DEVICE_ID = extras.getString(Constants.DEVICE_ID);
             EMP_ID = extras.getString(Constants.EMP_ID);
-            LogUtils.printLogs(BlackLineWebScreenActivity.this, "BlackLineWebScreenActivity:: Bundle: deviceName="
+            LogUtils.printLogs(AssignDeviceScreenActivity.this, "BlackLineWebScreenActivity:: Bundle: deviceName="
                     + DEVICE_ID + " empName=" + EMP_ID);
         } else {
             finish();
         }
 
         webView = findViewById(R.id.webview);
+        webView.setVisibility(View.INVISIBLE);
         progressBar = findViewById(R.id.progressBar);
+
+        RelativeLayout layout = findViewById(R.id.screenContent);
+        layout.setVisibility(View.VISIBLE);
+
+        tvScan = findViewById(R.id.tvScan);
+        tvScan.setText("Device assigning.. Please wait");
 
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
@@ -100,8 +98,8 @@ public class BlackLineWebScreenActivity extends AppCompatActivity {
             @Override
             public void onAssignDevice() {
                 Log.e(TAG, "onAssignDevice");
-                LogUtils.printLogs(BlackLineWebScreenActivity.this, "BlackLineWebScreenActivity:: onAssignDevice");
-                LogUtils.printLogs(BlackLineWebScreenActivity.this, "BlackLineWebScreenActivity:: " +
+                LogUtils.printLogs(AssignDeviceScreenActivity.this, "BlackLineWebScreenActivity:: onAssignDevice");
+                LogUtils.printLogs(AssignDeviceScreenActivity.this, "BlackLineWebScreenActivity:: " +
                         "onAssignDevice: isRedirectHome=" + isRedirectHome);
                 //if (!isRedirectHome) navigateToHome();
                 //assignDevice();
@@ -118,7 +116,7 @@ public class BlackLineWebScreenActivity extends AppCompatActivity {
             public boolean onConsoleMessage(ConsoleMessage message) {
                 String response = message.message();
                 Log.v(TAG, "onConsoleMessage:: response=" + response);
-                LogUtils.printLogs(BlackLineWebScreenActivity.this, "BlackLineWebScreenActivity:: " +
+                LogUtils.printLogs(AssignDeviceScreenActivity.this, "BlackLineWebScreenActivity:: " +
                         "onConsoleMessage:: response=" + response);
                 try {
                     String value = response.replace("Resp::  ", "");
@@ -141,7 +139,7 @@ public class BlackLineWebScreenActivity extends AppCompatActivity {
 
         webView.setWebViewClient(new MyWebClient());
         webView.loadUrl(QUICK_ASSIGN_URL);
-        LogUtils.printLogs(BlackLineWebScreenActivity.this, "BlackLineWebScreenActivity:: " +
+        LogUtils.printLogs(AssignDeviceScreenActivity.this, "BlackLineWebScreenActivity:: " +
                 "loadUrl=" + QUICK_ASSIGN_URL);
     }
 
@@ -153,7 +151,7 @@ public class BlackLineWebScreenActivity extends AppCompatActivity {
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             // TODO Auto-generated method stub
             Log.e(TAG, "onPageStarted:: url=" + url);
-            LogUtils.printLogs(BlackLineWebScreenActivity.this, "BlackLineWebScreenActivity:: " +
+            LogUtils.printLogs(AssignDeviceScreenActivity.this, "BlackLineWebScreenActivity:: " +
                     "onPageStarted:: url=" + url);
             super.onPageStarted(view, url, favicon);
             progressBar.setVisibility(View.VISIBLE);
@@ -162,7 +160,7 @@ public class BlackLineWebScreenActivity extends AppCompatActivity {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             Log.e(TAG, "shouldOverrideUrlLoading:: url=" + url);
-            LogUtils.printLogs(BlackLineWebScreenActivity.this, "BlackLineWebScreenActivity:: " +
+            LogUtils.printLogs(AssignDeviceScreenActivity.this, "BlackLineWebScreenActivity:: " +
                     "shouldOverrideUrlLoading:: url=" + url);
             view.loadUrl(url);
             return true;
@@ -172,21 +170,21 @@ public class BlackLineWebScreenActivity extends AppCompatActivity {
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
             Log.e(TAG, "onPageFinished:: url=" + url);
-            LogUtils.printLogs(BlackLineWebScreenActivity.this, "BlackLineWebScreenActivity:: " +
+            LogUtils.printLogs(AssignDeviceScreenActivity.this, "BlackLineWebScreenActivity:: " +
                     "onPageFinished:: url=" + url);
             progressBar.setVisibility(View.GONE);
             if (url.equals(WEB_URL)) {
                 String js = "javascript:var x =document.getElementById('email').value = '"
                         + EMAIL + "';var y=document.getElementById('password').value='"
                         + PASSWORD + "';document.getElementById('loginBtn').click();";
-                LogUtils.printLogs(BlackLineWebScreenActivity.this, "BlackLineWebScreenActivity:: " +
+                LogUtils.printLogs(AssignDeviceScreenActivity.this, "BlackLineWebScreenActivity:: " +
                         "onPageFinished:: \njavascript=" + js);
                 if (Build.VERSION.SDK_INT >= 19) {
                     view.evaluateJavascript(js, new ValueCallback<String>() {
                         @Override
                         public void onReceiveValue(String s) {
                             Log.e(TAG, "onReceiveValue=" + s);
-                            LogUtils.printLogs(BlackLineWebScreenActivity.this, "BlackLineWebScreenActivity:: " +
+                            LogUtils.printLogs(AssignDeviceScreenActivity.this, "BlackLineWebScreenActivity:: " +
                                     "onPageFinished:: " + url + "\nonReceiveValue=" + s);
                         }
                     });
@@ -277,7 +275,7 @@ public class BlackLineWebScreenActivity extends AppCompatActivity {
 
 
                 Log.e("Javascript", "javascript=" + javascript);
-                LogUtils.printLogs(BlackLineWebScreenActivity.this, "BlackLineWebScreenActivity:: " +
+                LogUtils.printLogs(AssignDeviceScreenActivity.this, "BlackLineWebScreenActivity:: " +
                         "onPageFinished:: \njavascript=" + javascript);
                 //https://stackoverflow.com/questions/3276794/jquery-or-pure-js-simulate-enter-key-pressed-for-testing
 
@@ -286,7 +284,7 @@ public class BlackLineWebScreenActivity extends AppCompatActivity {
                         @Override
                         public void onReceiveValue(String s) {
                             Log.e(TAG, "onReceiveValue=" + s);
-                            LogUtils.printLogs(BlackLineWebScreenActivity.this, "BlackLineWebScreenActivity:: " +
+                            LogUtils.printLogs(AssignDeviceScreenActivity.this, "BlackLineWebScreenActivity:: " +
                                     "onPageFinished:: " + url + "\nonReceiveValue=" + s);
                         }
                     });
@@ -363,14 +361,14 @@ public class BlackLineWebScreenActivity extends AppCompatActivity {
                 if (responseInfo.assigned) {
                     message = "Device assigned successfully";
                 }
-                Toast.makeText(BlackLineWebScreenActivity.this, message, Toast.LENGTH_LONG).show();
+                Toast.makeText(AssignDeviceScreenActivity.this, message, Toast.LENGTH_LONG).show();
                 new Handler().postDelayed(() -> runOnUiThread(() -> navigateToHome()), 200);
             }
 
             @Override
             public void onFailure(Call<Object> call, Throwable t) {
                 Log.e(TAG, "onFailure=" + t);
-                Toast.makeText(BlackLineWebScreenActivity.this,
+                Toast.makeText(AssignDeviceScreenActivity.this,
                         "Error while device getting assigned. Please try again", Toast.LENGTH_LONG).show();
                 new Handler().postDelayed(() -> runOnUiThread(() -> navigateToHome()), 200);
             }
@@ -380,13 +378,25 @@ public class BlackLineWebScreenActivity extends AppCompatActivity {
     private boolean isRedirectHome;
 
     private void navigateToHome() {
-        LogUtils.printLogs(BlackLineWebScreenActivity.this, "BlackLineWebScreenActivity:: navigateToHome");
+        LogUtils.printLogs(AssignDeviceScreenActivity.this, "BlackLineWebScreenActivity:: navigateToHome");
         isRedirectHome = true;
-        Toast.makeText(BlackLineWebScreenActivity.this, "Device assigned successfully",
+        tvScan.setText("Device Assigned!");
+        Toast.makeText(AssignDeviceScreenActivity.this, "Device assigned successfully",
                 Toast.LENGTH_LONG).show();
-        Intent intent = new Intent(getApplicationContext(), ScanEmpActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent intent = new Intent(getApplicationContext(), ScanEmpActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                    }
+                });
+            }
+        }, 1500);
     }
 
 }

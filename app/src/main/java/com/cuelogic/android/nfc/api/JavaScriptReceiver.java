@@ -26,6 +26,12 @@ public class JavaScriptReceiver {
     }
 
     @JavascriptInterface
+    public void sendToken(String token) {
+        Log.e(TAG, "sendToken");
+        listener.onTokenReceived(token);
+    }
+
+    @JavascriptInterface
     public void showOrders(int orderid) {
 
     }

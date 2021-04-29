@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.cuelogic.android.nfc.R;
 import com.cuelogic.android.nfc.comman.Constants;
 import com.cuelogic.android.nfc.comman.LogUtils;
+import com.cuelogic.android.nfc.main.AssignDeviceScreenActivity;
 import com.cuelogic.android.nfc.main.MainActivity;
 
 public class SendInputScreenActivity extends AppCompatActivity {
@@ -77,8 +78,8 @@ public class SendInputScreenActivity extends AppCompatActivity {
         Log.e(TAG, "sendInputs:: deviceName=" + deviceName + "empName: " + empName);
         LogUtils.printLogs(SendInputScreenActivity.this, "SendInputScreenActivity:: sendInputs: deviceName: "
                 + deviceName + "empName: " + empName);
-        //WebScreenActivity
-        Intent i = new Intent(SendInputScreenActivity.this, BlackLineWebScreenActivity.class);
+        //BlackLineWebScreenActivity
+        Intent i = new Intent(SendInputScreenActivity.this, AssignDeviceScreenActivity.class);
         i.putExtra(Constants.DEVICE_ID, deviceName);
         i.putExtra(Constants.EMP_ID, empName);
         startActivity(i);

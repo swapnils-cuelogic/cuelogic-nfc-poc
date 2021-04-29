@@ -137,7 +137,8 @@ public class ScanDeviceActivity extends BaseActivity {
         if (empId.equals(output)) return; //we yet to find the device name
         LogUtils.printLogs(ScanDeviceActivity.this, "ScanDeviceActivity:: onNfcInfo: info=" + output);
 
-        Intent intent = new Intent(ScanDeviceActivity.this, BlackLineWebScreenActivity.class);
+        //BlackLineWebScreenActivity
+        Intent intent = new Intent(ScanDeviceActivity.this, AssignDeviceScreenActivity.class);
         output = output.replaceAll("[\\n ]", "");
         intent.putExtra(Constants.DEVICE_ID, output);
         intent.putExtra(Constants.EMP_ID, empId);

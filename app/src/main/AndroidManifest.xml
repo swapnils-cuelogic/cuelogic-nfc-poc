@@ -22,21 +22,36 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".main.MainActivity"
-            android:screenOrientation="portrait"></activity>
-
-        <activity
-            android:name=".webview.TestBLWebScreenActivity"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".main.ScanEmpActivity"
+            android:name=".main.SplashActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".main.MainActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".webview.TestBLWebScreenActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".main.LoginScreenActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".main.ScanEmpActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <!--            <intent-filter>-->
+            <!--                <action android:name="android.intent.action.MAIN" />-->
+
+            <!--                <category android:name="android.intent.category.LAUNCHER" />-->
+            <!--            </intent-filter>-->
 
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
@@ -58,6 +73,11 @@
         <activity
             android:name=".webview.BlackLineWebScreenActivity"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".main.AssignDeviceScreenActivity"
+            android:screenOrientation="portrait" />
+
 
         <activity
             android:name=".webview.SendInputScreenActivity"

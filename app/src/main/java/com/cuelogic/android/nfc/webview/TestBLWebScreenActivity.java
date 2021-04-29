@@ -93,6 +93,11 @@ public class TestBLWebScreenActivity extends AppCompatActivity {
                 Log.e(TAG, "onAssignDevice");
                 assignDevice();
             }
+
+            @Override
+            public void onTokenReceived(String token) {
+                Log.e(TAG, "onTokenReceived");
+            }
         });
         webView.addJavascriptInterface(javaScriptReceiver, "JSReceiver");
 
