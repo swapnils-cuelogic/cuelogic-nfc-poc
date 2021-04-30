@@ -4,12 +4,11 @@ apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 30
+    flavorDimensions "versionCode"
     defaultConfig {
         applicationId "com.cuelogic.android.nfc"
         minSdkVersion 19
         targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
 
@@ -19,9 +18,36 @@ android {
     }
 
     buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    signingConfigs {
+        release {
+            storeFile file("keystore.jks")
+            storePassword "NewGr8Apps!"
+            keyAlias "cuelogic"
+            keyPassword "NewGr8Apps!"
+        }
+    }
+
+    productFlavors {
+        qa {
+            versionCode 2
+            versionName "dev-1.0"
+        }
+
+        prod {
+            versionCode 65
+            versionName "3.2.6"
+            signingConfig signingConfigs.release
         }
     }
 }
@@ -32,6 +58,11 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation "com.google.guava:guava:24.1-jre"
+
+    implementation 'com.squareup.retrofit2:retrofit:2.5.0'
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
+
     testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
