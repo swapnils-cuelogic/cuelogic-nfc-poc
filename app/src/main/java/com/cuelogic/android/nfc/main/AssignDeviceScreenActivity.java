@@ -69,14 +69,14 @@ public class AssignDeviceScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_aasigned);
-        LogUtils.printLogs(AssignDeviceScreenActivity.this, "BlackLineWebScreenActivity:: onCreate");
+        LogUtils.printLogs(AssignDeviceScreenActivity.this, "AssignDeviceScreenActivity:: onCreate");
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             DEVICE_ID = extras.getString(Constants.DEVICE_ID);
             EMP_ID = extras.getString(Constants.EMP_ID);
-            LogUtils.printLogs(AssignDeviceScreenActivity.this, "BlackLineWebScreenActivity:: Bundle: deviceName="
-                    + DEVICE_ID + " empName=" + EMP_ID);
+            LogUtils.printLogs(AssignDeviceScreenActivity.this, "AssignDeviceScreenActivity:: " +
+                    "Bundle: deviceName=" + DEVICE_ID + " empName=" + EMP_ID);
         } else {
             finish();
         }
@@ -89,7 +89,10 @@ public class AssignDeviceScreenActivity extends AppCompatActivity {
         layout.setVisibility(View.VISIBLE);
 
         tvScan = findViewById(R.id.tvScan);
-        tvScan.setText("Processing..");
+        String text = "Processing..";
+        tvScan.setText(text);
+        LogUtils.printLogs(AssignDeviceScreenActivity.this, "AssignDeviceScreenActivity:: " +
+                "tvScan: " + text);
 
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
@@ -98,8 +101,8 @@ public class AssignDeviceScreenActivity extends AppCompatActivity {
             @Override
             public void onAssignDevice() {
                 Log.e(TAG, "onAssignDevice");
-                LogUtils.printLogs(AssignDeviceScreenActivity.this, "BlackLineWebScreenActivity:: onAssignDevice");
-                LogUtils.printLogs(AssignDeviceScreenActivity.this, "BlackLineWebScreenActivity:: " +
+                LogUtils.printLogs(AssignDeviceScreenActivity.this, "AssignDeviceScreenActivity:: onAssignDevice");
+                LogUtils.printLogs(AssignDeviceScreenActivity.this, "AssignDeviceScreenActivity:: " +
                         "onAssignDevice: isRedirectHome=" + isRedirectHome);
                 //if (!isRedirectHome) navigateToHome();
                 //assignDevice();
@@ -116,7 +119,7 @@ public class AssignDeviceScreenActivity extends AppCompatActivity {
             public boolean onConsoleMessage(ConsoleMessage message) {
                 String response = message.message();
                 Log.v(TAG, "onConsoleMessage:: response=" + response);
-                LogUtils.printLogs(AssignDeviceScreenActivity.this, "BlackLineWebScreenActivity:: " +
+                LogUtils.printLogs(AssignDeviceScreenActivity.this, "AssignDeviceScreenActivity:: " +
                         "onConsoleMessage:: response=" + response);
                 try {
                     String value = response.replace("Resp::  ", "");
@@ -139,19 +142,16 @@ public class AssignDeviceScreenActivity extends AppCompatActivity {
 
         webView.setWebViewClient(new MyWebClient());
         webView.loadUrl(QUICK_ASSIGN_URL);
-        LogUtils.printLogs(AssignDeviceScreenActivity.this, "BlackLineWebScreenActivity:: " +
+        LogUtils.printLogs(AssignDeviceScreenActivity.this, "AssignDeviceScreenActivity:: " +
                 "loadUrl=" + QUICK_ASSIGN_URL);
     }
-
-    private boolean isActionPhpDone = false;
-    private boolean isRedirected;
 
     public class MyWebClient extends WebViewClient {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             // TODO Auto-generated method stub
             Log.e(TAG, "onPageStarted:: url=" + url);
-            LogUtils.printLogs(AssignDeviceScreenActivity.this, "BlackLineWebScreenActivity:: " +
+            LogUtils.printLogs(AssignDeviceScreenActivity.this, "AssignDeviceScreenActivity:: " +
                     "onPageStarted:: url=" + url);
             super.onPageStarted(view, url, favicon);
             progressBar.setVisibility(View.VISIBLE);
@@ -160,7 +160,7 @@ public class AssignDeviceScreenActivity extends AppCompatActivity {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             Log.e(TAG, "shouldOverrideUrlLoading:: url=" + url);
-            LogUtils.printLogs(AssignDeviceScreenActivity.this, "BlackLineWebScreenActivity:: " +
+            LogUtils.printLogs(AssignDeviceScreenActivity.this, "AssignDeviceScreenActivity:: " +
                     "shouldOverrideUrlLoading:: url=" + url);
             view.loadUrl(url);
             return true;
@@ -170,20 +170,20 @@ public class AssignDeviceScreenActivity extends AppCompatActivity {
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
             Log.e(TAG, "onPageFinished:: url=" + url);
-            LogUtils.printLogs(AssignDeviceScreenActivity.this, "BlackLineWebScreenActivity:: " +
+            LogUtils.printLogs(AssignDeviceScreenActivity.this, "AssignDeviceScreenActivity:: " +
                     "onPageFinished:: url=" + url);
             if (url.equals(WEB_URL)) {
                 String js = "javascript:var x =document.getElementById('email').value = '"
                         + EMAIL + "';var y=document.getElementById('password').value='"
                         + PASSWORD + "';document.getElementById('loginBtn').click();";
-                LogUtils.printLogs(AssignDeviceScreenActivity.this, "BlackLineWebScreenActivity:: " +
+                LogUtils.printLogs(AssignDeviceScreenActivity.this, "AssignDeviceScreenActivity:: " +
                         "onPageFinished:: \njavascript=" + js);
                 if (Build.VERSION.SDK_INT >= 19) {
                     view.evaluateJavascript(js, new ValueCallback<String>() {
                         @Override
                         public void onReceiveValue(String s) {
                             Log.e(TAG, "onReceiveValue=" + s);
-                            LogUtils.printLogs(AssignDeviceScreenActivity.this, "BlackLineWebScreenActivity:: " +
+                            LogUtils.printLogs(AssignDeviceScreenActivity.this, "AssignDeviceScreenActivity:: " +
                                     "onPageFinished:: " + url + "\nonReceiveValue=" + s);
                         }
                     });
@@ -242,7 +242,7 @@ public class AssignDeviceScreenActivity extends AppCompatActivity {
 
 
                 Log.e("Javascript", "javascript=" + javascript);
-                LogUtils.printLogs(AssignDeviceScreenActivity.this, "BlackLineWebScreenActivity:: " +
+                LogUtils.printLogs(AssignDeviceScreenActivity.this, "AssignDeviceScreenActivity:: " +
                         "onPageFinished:: \njavascript=" + javascript);
                 //https://stackoverflow.com/questions/3276794/jquery-or-pure-js-simulate-enter-key-pressed-for-testing
 
@@ -251,7 +251,7 @@ public class AssignDeviceScreenActivity extends AppCompatActivity {
                         @Override
                         public void onReceiveValue(String s) {
                             Log.e(TAG, "onReceiveValue=" + s);
-                            LogUtils.printLogs(AssignDeviceScreenActivity.this, "BlackLineWebScreenActivity:: " +
+                            LogUtils.printLogs(AssignDeviceScreenActivity.this, "AssignDeviceScreenActivity:: " +
                                     "onPageFinished:: " + url + "\nonReceiveValue=" + s);
                         }
                     });
@@ -289,12 +289,18 @@ public class AssignDeviceScreenActivity extends AppCompatActivity {
     private boolean isRedirectHome;
 
     private void navigateToHome() {
-        LogUtils.printLogs(AssignDeviceScreenActivity.this, "BlackLineWebScreenActivity:: navigateToHome");
+        LogUtils.printLogs(AssignDeviceScreenActivity.this, "AssignDeviceScreenActivity:: navigateToHome");
         progressBar.setVisibility(View.GONE);
         isRedirectHome = true;
-        tvScan.setText("Device Assigned!");
-        Toast.makeText(AssignDeviceScreenActivity.this, "Device assigned successfully",
-                Toast.LENGTH_LONG).show();
+
+        String text = "Device Assigned!";
+        tvScan.setText(text);
+        LogUtils.printLogs(AssignDeviceScreenActivity.this, "AssignDeviceScreenActivity:: " +
+                "tvScan: " + text);
+
+        String result = "Device assigned successfully";
+        Toast.makeText(AssignDeviceScreenActivity.this, result, Toast.LENGTH_LONG).show();
+        LogUtils.printLogs(AssignDeviceScreenActivity.this, "AssignDeviceScreenActivity:: " + result);
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -302,6 +308,7 @@ public class AssignDeviceScreenActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        LogUtils.printLogs(AssignDeviceScreenActivity.this, "AssignDeviceScreenActivity:: navigating to ScanEmpActivity");
                         Intent intent = new Intent(getApplicationContext(), ScanEmpActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);

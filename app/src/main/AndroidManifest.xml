@@ -23,7 +23,6 @@
 
         <activity
             android:name=".main.SplashActivity"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -42,12 +41,10 @@
 
         <activity
             android:name=".main.LoginScreenActivity"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name=".main.ScanEmpActivity"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <!--            <intent-filter>-->
             <!--                <action android:name="android.intent.action.MAIN" />-->
@@ -66,7 +63,6 @@
 
         <activity
             android:name=".main.ScanDeviceActivity"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
@@ -79,9 +75,7 @@
 
         <activity
             android:name=".main.AssignDeviceScreenActivity"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
 
         <activity
             android:name=".webview.SendInputScreenActivity"

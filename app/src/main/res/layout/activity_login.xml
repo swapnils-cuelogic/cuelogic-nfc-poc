@@ -116,7 +116,7 @@
                 android:paddingBottom="5dp"
                 android:text="Sign In"
                 android:textAllCaps="false"
-                android:textColor="@android:color/white" />
+                android:textColor="@drawable/selector_text" />
 
         </LinearLayout>
     </LinearLayout>
@@ -127,7 +127,7 @@
         android:layout_height="match_parent"
         android:clickable="true"
         android:gravity="center"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <ProgressBar
             android:id="@+id/progressBar"

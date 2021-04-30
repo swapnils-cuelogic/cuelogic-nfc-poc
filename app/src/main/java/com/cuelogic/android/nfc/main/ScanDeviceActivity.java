@@ -40,6 +40,7 @@ public class ScanDeviceActivity extends BaseActivity {
 
         tvScan = (TextView) findViewById(R.id.tvScan);
         ivScan = findViewById(R.id.ivScan);
+        ivScan.setImageResource(R.drawable.ic_device);
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
@@ -133,18 +134,22 @@ public class ScanDeviceActivity extends BaseActivity {
     private void navigate() {
         if (empId.equals(output)) return; //we yet to find the device name
         LogUtils.printLogs(ScanDeviceActivity.this, "ScanDeviceActivity:: onNfcInfo: info=" + output);
-
-        //BlackLineWebScreenActivity
-        Intent intent = new Intent(ScanDeviceActivity.this, AssignDeviceScreenActivity.class);
-        output = output.replaceAll("[\\n ]", "");
-        intent.putExtra(Constants.DEVICE_ID, output);
-        intent.putExtra(Constants.EMP_ID, empId);
-        startActivity(intent);
-
-//        Intent intent = new Intent(ScanDeviceActivity.this, SendInputScreenActivity.class);
-//        intent.putExtra(Constants.EMP_ID, empId);
-//        output = output.replaceAll("[\\n ]", "");
-//        intent.putExtra(Constants.DEVICE_ID, output);
-//        startActivity(intent);
+        ivScan.setImageResource(R.drawable.ic_g7_device);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //BlackLineWebScreenActivity
+                        Intent intent = new Intent(ScanDeviceActivity.this, AssignDeviceScreenActivity.class);
+                        output = output.replaceAll("[\\n ]", "");
+                        intent.putExtra(Constants.DEVICE_ID, output);
+                        intent.putExtra(Constants.EMP_ID, empId);
+                        startActivity(intent);
+                    }
+                });
+            }
+        }, 500);
     }
 }

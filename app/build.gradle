@@ -24,7 +24,7 @@ android {
         }
 
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -45,8 +45,8 @@ android {
         }
 
         prod {
-            versionCode 47
-            versionName "2.1.8"
+            versionCode 65
+            versionName "3.2.6"
             signingConfig signingConfigs.release
         }
     }

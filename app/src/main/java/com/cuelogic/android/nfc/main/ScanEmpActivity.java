@@ -40,6 +40,7 @@ public class ScanEmpActivity extends BaseActivity {
 
         tvScan = (TextView) findViewById(R.id.tvScan);
         ivScan = findViewById(R.id.ivScan);
+        ivScan.setImageResource(R.drawable.ic_configuration);
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
@@ -125,10 +126,21 @@ public class ScanEmpActivity extends BaseActivity {
 
     private void navigate() {
         LogUtils.printLogs(ScanEmpActivity.this, "ScanEmpActivity:: navigate: output=" + output);
-        Intent intent = new Intent(ScanEmpActivity.this, ScanDeviceActivity.class);
-        output = output.replaceAll("[\\n ]", "");
-        intent.putExtra(Constants.EMP_ID, output);
-        startActivity(intent);
+        ivScan.setImageResource(R.drawable.ic_emp_configuration);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent intent = new Intent(ScanEmpActivity.this, ScanDeviceActivity.class);
+                        output = output.replaceAll("[\\n ]", "");
+                        intent.putExtra(Constants.EMP_ID, output);
+                        startActivity(intent);
+                    }
+                });
+            }
+        }, 500);
     }
 
     public void onShareDebugLogs(View view) {

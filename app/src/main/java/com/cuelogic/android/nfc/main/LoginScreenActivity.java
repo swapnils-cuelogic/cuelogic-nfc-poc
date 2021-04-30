@@ -5,18 +5,25 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.webkit.ConsoleMessage;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
+import android.webkit.WebStorage;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -34,6 +41,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class LoginScreenActivity extends BaseActivity {
 
@@ -43,12 +52,10 @@ public class LoginScreenActivity extends BaseActivity {
     private ProgressBar progressBar;
     private EditText edtEmail, edtPassword;
     private Button btnLogin;
+    private LinearLayout progress;
 
     private JavaScriptReceiver javaScriptReceiver;
     private String token;
-//    private String WEB_URL = "https://live.blacklinesafety.com/sign-in?redirect_to=/ng/devices";
-//    private String REDIRECT_URL = "https://live.blacklinesafety.com/ng/devices";
-
 
     //https://live.blacklinesafety.com/sign-in
     //https://live.blacklinesafety.com/dashboard
@@ -64,14 +71,17 @@ public class LoginScreenActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        LogUtils.printLogs(LoginScreenActivity.this, "LoginScreenActivity:: onCreate");
         initUI();
     }
 
     @SuppressLint("SetJavaScriptEnabled")
     private void initUI() {
+        LogUtils.printLogs(LoginScreenActivity.this, "LoginScreenActivity:: initUI");
         webView = findViewById(R.id.webview);
+        progress = findViewById(R.id.progress);
         progressBar = findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.GONE);
+        progress.setVisibility(View.GONE);
         edtEmail = findViewById(R.id.edtEmail);
         edtEmail.setText(EMAIL);
         edtPassword = findViewById(R.id.edtPassword);
@@ -81,10 +91,15 @@ public class LoginScreenActivity extends BaseActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (edtEmail.getText().toString().length() == 0) {
-                    Toaster.showShort(LoginScreenActivity.this, "Please check the email address");
+                LogUtils.printLogs(LoginScreenActivity.this, "LoginScreenActivity:: btnLogin");
+                if (edtEmail.getText().toString().length() == 0 || !isValidEmail(edtEmail.getText().toString())) {
+                    String text = "Please check the email address";
+                    LogUtils.printLogs(LoginScreenActivity.this, "LoginScreenActivity:: " + text);
+                    Toaster.showShort(LoginScreenActivity.this, text);
                 } else if (edtPassword.getText().toString().length() == 0) {
-                    Toaster.showShort(LoginScreenActivity.this, "Please check the password");
+                    String text = "Please check the password";
+                    LogUtils.printLogs(LoginScreenActivity.this, "LoginScreenActivity:: " + text);
+                    Toaster.showShort(LoginScreenActivity.this, text);
                 } else {
                     doLogin();
                 }
@@ -108,13 +123,16 @@ public class LoginScreenActivity extends BaseActivity {
             @Override
             public void onTokenReceived(String token) {
                 Log.e(TAG, "onTokenReceived= " + token);
-                progressBar.setVisibility(View.GONE);
+                progress.setVisibility(View.GONE);
                 if (null != token && !token.equals(accessToken)) {
                     accessToken = token;
-                    Toaster.showShort(LoginScreenActivity.this, "Login Successfully");
+                    String text = "Login Successfully";
+                    Toaster.showShort(LoginScreenActivity.this, text);
+                    LogUtils.printLogs(LoginScreenActivity.this, "LoginScreenActivity:: " + text);
                     PreferencesHelper.getSharedPreferences(LoginScreenActivity.this)
                             .setAccessToken(accessToken);
                     startActivity(new Intent(LoginScreenActivity.this, ScanEmpActivity.class));
+                    finish();
                 }
             }
         });
@@ -129,21 +147,67 @@ public class LoginScreenActivity extends BaseActivity {
         });
     }
 
+    private boolean loginFailed = false;
+
     private void doLogin() {
+        LogUtils.printLogs(LoginScreenActivity.this, "LoginScreenActivity:: doLogin");
         String email = edtEmail.getText().toString();
         String password = edtPassword.getText().toString();
         Log.e(TAG, "Email= " + email + " Password= " + password);
 
-        progressBar.setVisibility(View.VISIBLE);
+        progress.setVisibility(View.VISIBLE);
         webView.setWebViewClient(new LoginWebClient(email, password));
         webView.loadUrl(WEB_URL);
         LogUtils.printLogs(LoginScreenActivity.this, "LoginScreenActivity:: " +
                 "loadUrl=" + WEB_URL);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+                    @Override
+                    public void run() {
+                        LogUtils.printLogs(LoginScreenActivity.this, "LoginScreenActivity:: Inside timeout condition");
+                        if (accessToken == null) {
+                            LogUtils.printLogs(LoginScreenActivity.this, "LoginScreenActivity:: accessToken==null");
+                            //process hasn't completed yet.. clear out the data
+                            Toaster.showShort(LoginScreenActivity.this, getString(R.string.login_failed));
+                            clear();
+                        }
+                    }
+                });
+            }
+        }, 60 * 1000); //TODO Timeout condition
     }
 
-    private void loginSuccess(String token) {
-        progressBar.setVisibility(View.GONE);
-        Log.e(TAG, "Login successfully\n" + token);
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void clear() {
+        LogUtils.printLogs(LoginScreenActivity.this, "LoginScreenActivity:: clear");
+        edtEmail.setText("");
+        edtPassword.setText("");
+        clearWebPref();
+    }
+
+    private void clearWebPref() {
+        LogUtils.printLogs(LoginScreenActivity.this, "LoginScreenActivity:: clearWebPref");
+        // Clear all the Application Cache, Web SQL Database and the HTML5 Web Storage
+        WebStorage.getInstance().deleteAllData();
+
+        // Clear all the cookies
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            CookieManager.getInstance().removeAllCookies(null);
+            CookieManager.getInstance().flush();
+        } else {
+            CookieSyncManager.createInstance(this);
+            CookieManager cookieManager = CookieManager.getInstance();
+            cookieManager.removeAllCookie();
+        }
+
+        webView.clearCache(true);
+        webView.clearFormData();
+        webView.clearHistory();
+        webView.clearSslPreferences();
     }
 
     private class LoginWebClient extends WebViewClient {
@@ -151,6 +215,7 @@ public class LoginScreenActivity extends BaseActivity {
         private String email, password;
 
         public LoginWebClient(String email, String password) {
+            LogUtils.printLogs(LoginScreenActivity.this, "LoginScreenActivity:: LoginWebClient");
             this.email = email;
             this.password = password;
         }
@@ -162,7 +227,7 @@ public class LoginScreenActivity extends BaseActivity {
             LogUtils.printLogs(LoginScreenActivity.this, "LoginScreenActivity:: " +
                     "onPageStarted:: url=" + url);
             super.onPageStarted(view, url, favicon);
-            progressBar.setVisibility(View.VISIBLE);
+            progress.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -235,5 +300,30 @@ public class LoginScreenActivity extends BaseActivity {
             }
             return super.shouldInterceptRequest(view, request);
         }
+    }
+
+    private boolean isValidEmail(String target) {
+        boolean result = !TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches()
+                && emailValid(target);
+        LogUtils.printLogs(LoginScreenActivity.this, "LoginScreenActivity:: isValidEmail="
+                + target + " result=" + result);
+        return result;
+    }
+
+    /**
+     * http://www.mkyong.com/regular-expressions/how-to-validate-email-address-with-regular-expression/
+     *
+     * @param email
+     * @return
+     */
+    private static boolean emailValid(String email) {
+        final String EMAIL_PATTERN =
+                "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                        + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+//        final String EMAIL_PATTERN =
+//                ".+@([A-Za-z0-9-]+\\.)+[A-Za-z]{2}[A-Za-z]*";
+        Pattern pattern = Pattern.compile(EMAIL_PATTERN);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 }

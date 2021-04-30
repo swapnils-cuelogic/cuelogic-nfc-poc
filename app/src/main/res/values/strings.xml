@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Cue NFC Example</string>
+    <string name="app_name">G7 Assign App</string>
 
     <string name="write_tag">Write Tag</string>
     <string name="read_tag">Tap NFC tag to read!!</string>
@@ -75,4 +75,5 @@
 	<p>Cuelogic NFC POC Work Page.</p>
 	]]>
     </string>
+    <string name="login_failed">Something went wrong. Please try again after some time</string>
 </resources>
