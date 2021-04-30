@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".webview.WebScreenActivity">
+
+        <WebView
+            android:id="@+id/webview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/ivBlacklineLogo"
+            android:layout_width="286dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="40dp"
+            android:src="@drawable/ic_blackline_safety" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvOrganization"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/michroma_regular"
+                android:gravity="center_vertical"
+                android:lineSpacingExtra="0sp"
+                android:paddingTop="7dp"
+                android:paddingBottom="10dp"
+                android:text="Organization"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/edtEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_rounded_edittext"
+                android:fontFamily="@font/michroma_regular"
+                android:hint="Email Address"
+                android:inputType="textEmailAddress"
+                android:paddingLeft="7dp"
+                android:paddingBottom="7dp"
+                android:text=""
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="24dp" />
+
+            <TextView
+                android:id="@+id/tvPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/michroma_regular"
+                android:gravity="center_vertical"
+                android:lineSpacingExtra="0sp"
+                android:paddingTop="7dp"
+                android:paddingBottom="10dp"
+                android:text="Password"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/edtPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_rounded_edittext"
+                android:fontFamily="@font/michroma_regular"
+                android:hint="Password"
+                android:inputType="textPassword"
+                android:paddingLeft="7dp"
+                android:paddingBottom="7dp"
+                android:text=""
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="24dp" />
+
+            <Button
+                android:id="@+id/btnLogin"
+                android:layout_width="240dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_rounded_button"
+                android:fontFamily="@font/michroma_regular"
+                android:gravity="center"
+                android:paddingBottom="5dp"
+                android:text="Sign In"
+                android:textAllCaps="false"
+                android:textColor="@drawable/selector_text" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/progress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_margin="16dp"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/themeColor"
+            android:indeterminateTintMode="src_atop"
+            android:visibility="visible" />
+
+    </LinearLayout>
+
+</FrameLayout>
