@@ -9,6 +9,15 @@
         android:layout_height="56dp">
 
         <ImageView
+            android:id="@+id/ivLogout"
+            android:layout_width="56dp"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@+id/ivShareLogs"
+            android:onClick="onLogout"
+            android:padding="12dp"
+            android:src="@drawable/selector_logout" />
+
+        <ImageView
             android:id="@+id/ivShareLogs"
             android:layout_width="56dp"
             android:layout_height="match_parent"

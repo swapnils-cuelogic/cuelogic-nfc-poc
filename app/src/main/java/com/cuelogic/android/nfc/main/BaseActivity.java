@@ -2,7 +2,10 @@ package com.cuelogic.android.nfc.main;
 
 import android.annotation.SuppressLint;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
@@ -12,7 +15,10 @@ import android.nfc.tech.MifareUltralight;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Parcelable;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.provider.Settings;
 import android.view.View;
 import android.widget.TextView;
@@ -153,5 +159,27 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void onShareDebugLogs(View view) {
         LogUtils.printLogs(BaseActivity.this, "ScanEmpActivity:: onShareDebugLogs");
         LogUtils.emailLogs(BaseActivity.this);
+    }
+
+    public void beep(int duration) {
+        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        int vibrationTime = duration - 50;
+        // vibrate for 500 milliseconds
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            v.vibrate(VibrationEffect.createOneShot(vibrationTime, VibrationEffect.DEFAULT_AMPLITUDE));
+        } else {
+            //deprecated in API 26
+            v.vibrate(vibrationTime);
+        }
+
+        ToneGenerator toneGen = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
+        toneGen.startTone(ToneGenerator.TONE_DTMF_S, duration);
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                toneGen.release();
+            }
+        }, (duration + 50));
     }
 }

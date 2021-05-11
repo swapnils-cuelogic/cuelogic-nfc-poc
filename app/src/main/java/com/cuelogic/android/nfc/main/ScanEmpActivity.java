@@ -6,10 +6,15 @@ import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.view.View;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
+import android.webkit.WebStorage;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,7 +23,9 @@ import androidx.annotation.Nullable;
 
 import com.cuelogic.android.nfc.R;
 import com.cuelogic.android.nfc.comman.Constants;
+import com.cuelogic.android.nfc.comman.DialogHelper;
 import com.cuelogic.android.nfc.comman.LogUtils;
+import com.cuelogic.android.nfc.comman.PreferencesHelper;
 import com.cuelogic.android.nfc.comman.Utils;
 import com.cuelogic.android.nfc.webview.SendInputScreenActivity;
 
@@ -126,7 +133,8 @@ public class ScanEmpActivity extends BaseActivity {
 
     private void navigate() {
         LogUtils.printLogs(ScanEmpActivity.this, "ScanEmpActivity:: navigate: output=" + output);
-        ivScan.setImageResource(R.drawable.ic_emp_configuration);
+        //ivScan.setImageResource(R.drawable.ic_emp_configuration);
+        beep(150);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -140,12 +148,59 @@ public class ScanEmpActivity extends BaseActivity {
                     }
                 });
             }
-        }, 500);
+        }, 200);
     }
 
     public void onShareDebugLogs(View view) {
         LogUtils.printLogs(ScanEmpActivity.this, "ScanEmpActivity:: onShareDebugLogs");
         LogUtils.emailLogs(ScanEmpActivity.this);
+    }
+
+    public void onLogout(View view) {
+        LogUtils.printLogs(ScanEmpActivity.this, "ScanEmpActivity:: onLogout");
+        DialogHelper.showAlertDialogWithTwoButton(ScanEmpActivity.this, "Alert",
+                "Do you really want to logout from app?", "Yes. Logout",
+                "Cancel", new DialogHelper.AlertDialogListener() {
+                    @Override
+                    public void onPositiveButtonSelected() {
+                        PreferencesHelper.getSharedPreferences(ScanEmpActivity.this).setAccessToken(null);
+                        clearWebPref();
+                        LogUtils.printLogs(ScanEmpActivity.this, "ScanEmpActivity:: navigating to LoginScreenActivity");
+                        new Handler().postDelayed(() -> runOnUiThread(() -> {
+                            Intent intent = new Intent(ScanEmpActivity.this, LoginScreenActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                        }), 160);
+
+                    }
+
+                    @Override
+                    public void onNegativeButtonSelected() {
+
+                    }
+                });
+    }
+
+    private void clearWebPref() {
+        LogUtils.printLogs(ScanEmpActivity.this, "ScanEmpActivity:: clearWebPref");
+        // Clear all the Application Cache, Web SQL Database and the HTML5 Web Storage
+        WebStorage.getInstance().deleteAllData();
+
+        // Clear all the cookies
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            CookieManager.getInstance().removeAllCookies(null);
+            CookieManager.getInstance().flush();
+        } else {
+            CookieSyncManager.createInstance(this);
+            CookieManager cookieManager = CookieManager.getInstance();
+            cookieManager.removeAllCookie();
+        }
+
+        WebView webView = new WebView(ScanEmpActivity.this);
+        webView.clearCache(true);
+        webView.clearFormData();
+        webView.clearHistory();
+        webView.clearSslPreferences();
     }
 
     public void onSendManual(View view) {

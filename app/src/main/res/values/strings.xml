@@ -3,6 +3,7 @@
 
     <string name="write_tag">Write Tag</string>
     <string name="read_tag">Tap NFC tag to read!!</string>
+    <string name="string_ok">Okay</string>
 
     <string name="font_oem1">fonts/poppins/poppins-light.ttf</string>
     <string name="font_oem2">fonts/poppins/poppins-regular.ttf</string>
@@ -75,5 +76,5 @@
 	<p>Cuelogic NFC POC Work Page.</p>
 	]]>
     </string>
-    <string name="login_failed">Something went wrong. Please try again after some time</string>
+    <string name="login_failed">Something went wrong. Please check the login credentials or try again after some time</string>
 </resources>

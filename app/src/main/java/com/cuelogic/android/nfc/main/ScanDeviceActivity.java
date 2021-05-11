@@ -134,7 +134,8 @@ public class ScanDeviceActivity extends BaseActivity {
     private void navigate() {
         if (empId.equals(output)) return; //we yet to find the device name
         LogUtils.printLogs(ScanDeviceActivity.this, "ScanDeviceActivity:: onNfcInfo: info=" + output);
-        ivScan.setImageResource(R.drawable.ic_g7_device);
+        //ivScan.setImageResource(R.drawable.ic_g7_device);
+        beep(150);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -150,6 +151,6 @@ public class ScanDeviceActivity extends BaseActivity {
                     }
                 });
             }
-        }, 500);
+        }, 200);
     }
 }

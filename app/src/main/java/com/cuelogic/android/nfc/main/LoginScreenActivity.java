@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Layout;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
@@ -33,6 +34,7 @@ import androidx.annotation.RequiresApi;
 import com.cuelogic.android.nfc.R;
 import com.cuelogic.android.nfc.api.ConsoleResponse;
 import com.cuelogic.android.nfc.api.JavaScriptReceiver;
+import com.cuelogic.android.nfc.comman.DialogHelper;
 import com.cuelogic.android.nfc.comman.LogUtils;
 import com.cuelogic.android.nfc.comman.PreferencesHelper;
 import com.cuelogic.android.nfc.comman.Toaster;
@@ -53,6 +55,7 @@ public class LoginScreenActivity extends BaseActivity {
     private EditText edtEmail, edtPassword;
     private Button btnLogin;
     private LinearLayout progress;
+    private LinearLayout linContent;
 
     private JavaScriptReceiver javaScriptReceiver;
     private String token;
@@ -83,10 +86,11 @@ public class LoginScreenActivity extends BaseActivity {
         progressBar = findViewById(R.id.progressBar);
         progress.setVisibility(View.GONE);
         edtEmail = findViewById(R.id.edtEmail);
-        edtEmail.setText(EMAIL);
+        //edtEmail.setText(EMAIL);
         edtPassword = findViewById(R.id.edtPassword);
-        edtPassword.setText(PASSWORD);
+        //edtPassword.setText(PASSWORD);
         btnLogin = findViewById(R.id.btnLogin);
+        linContent = findViewById(R.id.linContent);
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,6 +158,8 @@ public class LoginScreenActivity extends BaseActivity {
         String email = edtEmail.getText().toString();
         String password = edtPassword.getText().toString();
         Log.e(TAG, "Email= " + email + " Password= " + password);
+        LogUtils.printLogs(LoginScreenActivity.this, "LoginScreenActivity:: Email= " +
+                email + " Password= " + password);
 
         progress.setVisibility(View.VISIBLE);
         webView.setWebViewClient(new LoginWebClient(email, password));
@@ -171,9 +177,14 @@ public class LoginScreenActivity extends BaseActivity {
                         LogUtils.printLogs(LoginScreenActivity.this, "LoginScreenActivity:: Inside timeout condition");
                         if (accessToken == null) {
                             LogUtils.printLogs(LoginScreenActivity.this, "LoginScreenActivity:: accessToken==null");
-                            //process hasn't completed yet.. clear out the data
-                            Toaster.showShort(LoginScreenActivity.this, getString(R.string.login_failed));
                             clear();
+                            //process hasn't completed yet.. clear out the data
+                            DialogHelper.showAlertDialog(LoginScreenActivity.this, "Alert", getString(R.string.login_failed), new DialogHelper.AlertClickListener() {
+                                @Override
+                                public void onClicked() {
+                                    recreate();
+                                }
+                            });
                         }
                     }
                 });
@@ -186,6 +197,11 @@ public class LoginScreenActivity extends BaseActivity {
         LogUtils.printLogs(LoginScreenActivity.this, "LoginScreenActivity:: clear");
         edtEmail.setText("");
         edtPassword.setText("");
+        edtEmail.requestFocus();
+        //edtEmail.setSelection(0);
+        progress.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
+        linContent.setVisibility(View.VISIBLE);
         clearWebPref();
     }
 

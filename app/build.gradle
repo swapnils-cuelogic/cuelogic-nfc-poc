@@ -45,8 +45,8 @@ android {
         }
 
         prod {
-            versionCode 65
-            versionName "3.2.6"
+            versionCode 83
+            versionName "3.4.4"
             signingConfig signingConfigs.release
         }
     }
